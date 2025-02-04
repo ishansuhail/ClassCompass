@@ -33,6 +33,10 @@ Whenever you make changes to the frontend, you need to build the React app:
    ```sh
    npm run build
    ```
+2. If you are committing changes to GitHub, make sure to add the build files back to the repository by running:
+   ```sh
+   git add client/build
+   ```
 
 ### 3. Running the Application Locally
 1. In the terminal at the root directory, start the backend server:
@@ -44,6 +48,7 @@ Whenever you make changes to the frontend, you need to build the React app:
 ## Notes
 - Ensure both the backend and frontend dependencies are installed before starting the application.
 - Running `npm run build` in the `client` folder compiles the frontend assets before serving them.
+- If committing to GitHub, remember to add the build folder (`client/build`) using `git add client/build` to ensure the latest built assets are included.
 
 Enjoy coding! 🚀
 
