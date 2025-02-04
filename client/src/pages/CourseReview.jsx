@@ -37,16 +37,15 @@ const CoursePage = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-8">
-      {/* Header Section */}
-      <header className="bg-blue-200 p-6 rounded-lg text-center border border-yellow-500">
-        <h1 className="text-3xl font-bold">CSCI1010</h1>
-        <p className="text-lg">Intro to Computer Science</p>
-        <div className="mt-4 flex justify-center">
-          <button className="px-4 py-2 bg-white border border-yellow-400 rounded shadow flex items-center">
-            Past Syllabi <span className="ml-2">&#x25BC;</span>
-          </button>
+      {/* Header Section with Logo */}
+      <header className="bg-blue-200 p-6 rounded-lg border border-yellow-500 flex items-center">
+        <img src="/logo.png" alt="ClassCompass Logo" className="w-12 h-12 mr-4" />
+        <div className="text-center flex-grow">
+            <h1 className="text-3xl font-bold text-red-500">Tailwind is Working!</h1>
+            <p className="text-lg">Intro to Computer Science</p>
         </div>
       </header>
+
 
       {/* Course Stats Section */}
       <section>
