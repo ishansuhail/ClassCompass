@@ -7,20 +7,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <header className="App-header">
-          <img src="/logo.png" alt="ClassCompass Logo" className="w-12 h-12 mr-4" />
-        <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
 
         {/* Define Routes */}
         <Routes>
