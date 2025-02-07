@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaInfoCircle } from "react-icons/fa"; // Importing an icon for course stats
+import { FaInfoCircle } from "react-icons/fa";
 
 const CoursePage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -9,6 +9,12 @@ const CoursePage = () => {
     { title: "Exams", description: "Information on exam weight, difficulty, and structure." },
     { title: "Homework", description: "Overview of homework frequency, difficulty, and expectations." },
     { title: "Grading Policy", description: "Breakdown of grade components and grading criteria." },
+  ];
+
+  const studentAnalytics = [
+    { title: "Hours Spent per Week", description: "Average time spent studying and attending class." },
+    { title: "Class Difficulty", description: "Subjective rating of the course difficulty." },
+    { title: "Grade Attained", description: "Average grade received by students." },
   ];
 
   return (
@@ -46,12 +52,32 @@ const CoursePage = () => {
           <p className="text-gray-600 text-left">Info provided by the RPI community</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
             {courseStats.map((stat, index) => (
-              <div key={index} className="p-4 bg-white shadow rounded-lg flex items-start border border-gray-200">
+              <button
+                key={index}
+                className="w-full p-4 bg-white shadow rounded-lg flex items-start border border-gray-200 text-left hover:bg-gray-100 transition duration-200"
+              >
                 <FaInfoCircle className="text-blue-500 w-6 h-6 mr-3" />
                 <div>
                   <h3 className="font-semibold text-lg">{stat.title}</h3>
                   <p className="text-sm text-gray-500">{stat.description}</p>
                 </div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Student Analytics Section */}
+        <section className="mt-8">
+          <h2 className="text-2xl font-semibold text-gray-900 text-left">Student Body Analytics</h2>
+          <p className="text-gray-600 text-left">Analytics submitted by the RPI community</p>
+          <div className="space-y-4 mt-4">
+            {studentAnalytics.map((analytic, index) => (
+              <div key={index} className="p-4 bg-white border border-yellow-500 rounded-lg shadow text-left">
+                <h3 className="font-semibold text-lg">{analytic.title}</h3>
+                <p className="text-sm text-gray-500">{analytic.description}</p>
+                <button className="mt-2 px-3 py-1 bg-gray-200 border rounded">
+                  View Response Analytics
+                </button>
               </div>
             ))}
           </div>
