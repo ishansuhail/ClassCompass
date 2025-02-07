@@ -3,6 +3,7 @@ import { FaInfoCircle } from "react-icons/fa";
 
 const CoursePage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedAnalytics, setSelectedAnalytics] = useState({}); // State to track selected buttons
 
   const courseStats = [
     { title: "Attendance", description: "Details about attendance policies and requirements." },
@@ -16,6 +17,13 @@ const CoursePage = () => {
     { title: "Class Difficulty", description: "Subjective rating of the course difficulty." },
     { title: "Grade Attained", description: "Average grade received by students." },
   ];
+
+  const toggleSelection = (index) => {
+    setSelectedAnalytics((prev) => ({
+      ...prev,
+      [index]: !prev[index], // Toggle selected state
+    }));
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -54,7 +62,7 @@ const CoursePage = () => {
             {courseStats.map((stat, index) => (
               <button
                 key={index}
-                className="w-full p-4 bg-white shadow rounded-lg flex items-start border border-gray-200 text-left hover:bg-gray-100 transition duration-200"
+                className="w-full p-4 bg-white shadow rounded-lg flex items-start border border-yellow-500 text-left hover:bg-gray-200 transition duration-200"
               >
                 <FaInfoCircle className="text-blue-500 w-6 h-6 mr-3" />
                 <div>
@@ -75,7 +83,12 @@ const CoursePage = () => {
               <div key={index} className="p-4 bg-white border border-yellow-500 rounded-lg shadow text-left">
                 <h3 className="font-semibold text-lg">{analytic.title}</h3>
                 <p className="text-sm text-gray-500">{analytic.description}</p>
-                <button className="mt-2 px-3 py-1 bg-gray-200 border rounded">
+                <button
+                  onClick={() => toggleSelection(index)}
+                  className={`mt-2 px-3 py-1 border rounded transition duration-200 ${
+                    selectedAnalytics[index] ? "bg-gray-300" : "bg-gray-100 hover:bg-gray-300"
+                  }`}
+                >
                   View Response Analytics
                 </button>
               </div>
