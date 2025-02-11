@@ -29,27 +29,34 @@ const CoursePage = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header Section */}
-      <header className="bg-blue-100 border-2 border-yellow-500 w-full py-8 flex flex-col items-center">
-        <img src="/logo.png" alt="ClassCompass Logo" className="w-16 h-16 mb-2" />
-        <h1 className="text-4xl font-bold text-gray-900">CSCI1010</h1>
-        <p className="text-lg text-gray-700">Intro to Computer Science</p>
+      <header className="bg-blue-100 border-2 border-yellow-500 w-full py-8 px-8 flex items-center relative">
+        {/* Left - Logo */}
+        <div className="flex-shrink-0">
+          <img src="/logo.png" alt="ClassCompass Logo" className="w-40 h-40" />
+        </div>
 
-        {/* Dropdown for Past Syllabi */}
-        <div className="relative mt-4">
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="bg-white border border-gray-300 rounded px-4 py-2 shadow-sm focus:outline-none"
-          >
-            Past Syllabi ▼
-          </button>
-          {isDropdownOpen && (
-            <div className="absolute left-0 mt-2 w-40 bg-white border border-gray-300 rounded shadow-md">
-              <ul className="py-2 text-gray-700">
-                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Fall 2024</li>
-                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Spring 2024</li>
-              </ul>
-            </div>
-          )}
+        {/* Centered Course Info - Absolute Centering */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          <h1 className="text-4xl font-bold text-gray-900">CSCI 1100</h1>
+          <p className="text-2xl text-gray-700">Intro to Computer Science</p>
+
+          {/* Dropdown for Past Syllabi */}
+          <div className="relative mt-4">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="bg-white border border-gray-300 rounded px-4 py-2 shadow-sm focus:outline-none"
+            >
+              Past Syllabi ▼
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-40 bg-white border border-gray-300 rounded shadow-md">
+                <ul className="py-2 text-gray-700">
+                  <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Fall 2024</li>
+                  <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Spring 2024</li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
