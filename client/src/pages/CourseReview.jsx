@@ -3,7 +3,8 @@ import { FaInfoCircle } from "react-icons/fa";
 
 const CoursePage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedAnalytics, setSelectedAnalytics] = useState({}); // State to track selected buttons
+  const [selectedAnalytics, setSelectedAnalytics] = useState({}); // State to track selected analytics buttons
+  const [selectedCourseStats, setSelectedCourseStats] = useState({}); // State to track selected course stats buttons
 
   const courseStats = [
     { title: "Attendance", description: "Details about attendance policies and requirements." },
@@ -17,6 +18,13 @@ const CoursePage = () => {
     { title: "Class Difficulty", description: "Subjective rating of the course difficulty." },
     { title: "Grade Attained", description: "Average grade received by students." },
   ];
+
+  const toggleCourseStatsSelection = (index) => {
+    setSelectedCourseStats((prev) => ({
+      ...prev,
+      [index]: !prev[index], // Toggle selected state
+    }));
+  };
 
   const toggleSelection = (index) => {
     setSelectedAnalytics((prev) => ({
@@ -62,7 +70,10 @@ const CoursePage = () => {
             {courseStats.map((stat, index) => (
               <button
                 key={index}
-                className="w-full p-4 bg-white shadow rounded-lg flex items-start border border-yellow-500 text-left hover:bg-gray-200 transition duration-200"
+                onClick={() => toggleCourseStatsSelection(index)}
+                className={`w-full p-4 shadow rounded-lg flex items-start border border-yellow-500 text-left transition duration-200 ${
+                  selectedCourseStats[index] ? "bg-gray-200" : "bg-white hover:bg-gray-200"
+                }`}
               >
                 <FaInfoCircle className="text-blue-500 w-6 h-6 mr-3" />
                 <div>
