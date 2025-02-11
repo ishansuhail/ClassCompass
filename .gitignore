@@ -25,7 +25,3 @@ yarn-debug.log*
 yarn-error.log*
 server/.env
 .env
-
-# Ignore package and package lock files
-*/package.json
-*/package-lock.json
