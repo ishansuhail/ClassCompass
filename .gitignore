@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 client/node_modules
+server/node_modules
 
 # testing
 /coverage
@@ -24,3 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 server/.env
 .env
+
+# Ignore package and package lock files
+*/package.json
+*/package-lock.json
