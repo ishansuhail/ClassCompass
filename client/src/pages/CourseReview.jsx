@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaInfoCircle } from "react-icons/fa";
+import { GrCalendar, GrBarChart, GrCertificate, GrCatalog } from "react-icons/gr"; // Importing new icons
 
 const CoursePage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -7,10 +7,10 @@ const CoursePage = () => {
   const [selectedCourseStats, setSelectedCourseStats] = useState({}); // State to track selected course stats buttons
 
   const courseStats = [
-    { title: "Attendance", description: "Details about attendance policies and requirements." },
-    { title: "Exams", description: "Information on exam weight, difficulty, and structure." },
-    { title: "Homework", description: "Overview of homework frequency, difficulty, and expectations." },
-    { title: "Grading Policy", description: "Breakdown of grade components and grading criteria." },
+    { title: "Attendance", description: "Details about attendance policies and requirements.", icon: <GrCalendar /> },
+    { title: "Exams", description: "Information on exam weight, difficulty, and structure.", icon: <GrCertificate /> },
+    { title: "Homework", description: "Overview of homework frequency, difficulty, and expectations.", icon: <GrCatalog /> },
+    { title: "Grading Policy", description: "Breakdown of grade components and grading criteria.", icon: <GrBarChart /> },
   ];
 
   const studentAnalytics = [
@@ -21,13 +21,6 @@ const CoursePage = () => {
 
   const toggleCourseStatsSelection = (index) => {
     setSelectedCourseStats((prev) => ({
-      ...prev,
-      [index]: !prev[index], // Toggle selected state
-    }));
-  };
-
-  const toggleSelection = (index) => {
-    setSelectedAnalytics((prev) => ({
       ...prev,
       [index]: !prev[index], // Toggle selected state
     }));
@@ -71,11 +64,11 @@ const CoursePage = () => {
               <button
                 key={index}
                 onClick={() => toggleCourseStatsSelection(index)}
-                className={`w-full p-4 shadow rounded-lg flex items-start border border-yellow-500 text-left transition duration-200 ${
+                className={`w-full p-6 shadow rounded-lg flex items-center border border-yellow-500 text-left transition duration-200 ${
                   selectedCourseStats[index] ? "bg-gray-200" : "bg-white hover:bg-gray-200"
                 }`}
               >
-                <FaInfoCircle className="text-blue-500 w-6 h-6 mr-3" />
+                <div className="text-blue-500 text-2xl flex-shrink-0 self-center mr-4">{stat.icon}</div> {/* Bigger icon, aligned left */}
                 <div>
                   <h3 className="font-semibold text-lg">{stat.title}</h3>
                   <p className="text-sm text-gray-500">{stat.description}</p>
@@ -95,10 +88,7 @@ const CoursePage = () => {
                 <h3 className="font-semibold text-lg">{analytic.title}</h3>
                 <p className="text-sm text-gray-500">{analytic.description}</p>
                 <button
-                  onClick={() => toggleSelection(index)}
-                  className={`mt-2 px-3 py-1 border rounded transition duration-200 ${
-                    selectedAnalytics[index] ? "bg-gray-300" : "bg-gray-100 hover:bg-gray-300"
-                  }`}
+                  className="mt-2 px-3 py-1 border rounded transition duration-200 bg-gray-100 hover:bg-gray-300"
                 >
                   View Response Analytics
                 </button>
@@ -156,17 +146,6 @@ const CoursePage = () => {
                 id="homework"
                 type="text"
                 placeholder="Homework frequency and difficulty"
-                className="w-full p-2 border rounded"
-              />
-            </div>
-            <div>
-              <label htmlFor="grading" className="block text-sm font-medium text-gray-700">
-                Grading Policy
-              </label>
-              <input
-                id="grading"
-                type="text"
-                placeholder="Breakdown of grades"
                 className="w-full p-2 border rounded"
               />
             </div>
