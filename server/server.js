@@ -36,8 +36,7 @@ app.post('/api/search', async (req, res) => {
       const { data, error } = await supabase
           .from('syllabus_info')
           .select('*')
-          .ilike('course_code', `%${searchTerm}%`) // Search in course column
-           // Search in subject column
+          .or(`course_code.ilike.%${searchTerm}%,subject.ilike.%${searchTerm}%,name.ilike.%${searchTerm}%`); // Search in subject column
       
       if (error) {
           throw error;
