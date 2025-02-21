@@ -3,11 +3,16 @@ const supabase = require('./db.js');
 
 // Import Express.js to set up the server
 const express = require('express');
+
 const app = express();
 const path = require('path');
+require('dotenv').config();
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // Define the port the server will listen on
 const PORT = 5001;
+
+app.use(express.json());
 
 // Serve static files from the React app's build directory
 app.use(express.static(path.join(__dirname, '../client/build')));
@@ -21,6 +26,28 @@ app.get('*', (req, res) => {
 // Start the Express server and log that it is running
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+});
+
+app.post('/api/search', async (req, res) => {
+  const { searchTerm } = req.body;
+  console.log(searchTerm);
+  
+  try {
+      const { data, error } = await supabase
+          .from('syllabus_info')
+          .select('*')
+          .ilike('course_code', `%${searchTerm}%`) // Search in course column
+           // Search in subject column
+      
+      if (error) {
+          throw error;
+      }
+      
+      res.json({ success: true, data });
+  } catch (error) {
+      console.error('Search error:', error.message);
+      res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // Function to fetch data from the 'syllabus_info' table in Supabase
@@ -40,4 +67,6 @@ async function fetchData() {
 
 // Call fetchData and log its result
 // Note: This will initially log a pending Promise because fetchData is asynchronous
-console.log(fetchData());
+// console.log(fetchData());
+
+
