@@ -36,7 +36,7 @@ app.post('/api/search', async (req, res) => {
       const { data, error } = await supabase
           .from('syllabus_info')
           .select('*')
-          .or(`course_code.ilike.%${searchTerm}%,subject.ilike.%${searchTerm}%,name.ilike.%${searchTerm}%`); // Search in subject column
+          .or(`course_code.ilike.%${searchTerm}%,subject.ilike.%${searchTerm}%,name.ilike.%${searchTerm}%`); 
       
       if (error) {
           throw error;
@@ -48,6 +48,26 @@ app.post('/api/search', async (req, res) => {
       res.status(500).json({ success: false, error: error.message });
   }
 });
+
+app.post('/api/feedback', async (req, res) => {
+    const feedbackData = req.body;
+    
+    try {
+        const { data, error } = await supabase
+            .from('student_feedback')
+            .insert([feedbackData]);
+        
+        if (error) {
+            throw error;
+        }
+        
+        res.json({ success: true, message: 'Feedback stored successfully' });
+    } catch (error) {
+        console.error('Error storing feedback:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 
 // Function to fetch data from the 'syllabus_info' table in Supabase
 async function fetchData() {
@@ -66,6 +86,6 @@ async function fetchData() {
 
 // Call fetchData and log its result
 // Note: This will initially log a pending Promise because fetchData is asynchronous
-// console.log(fetchData());
+console.log(fetchData());
 
 
