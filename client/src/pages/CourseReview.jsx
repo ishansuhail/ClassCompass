@@ -27,20 +27,25 @@ const CoursePage = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen bg-gray-100 p-6">
       {/* Header Section */}
-      <header className="bg-blue-100 border-2 border-yellow-500 w-full py-8 px-8 flex items-center relative">
-        {/* Left - Logo */}
-        <div className="flex-shrink-0">
-          <img src="/logo.png" alt="ClassCompass Logo" className="w-40 h-40" />
-        </div>
+      {/* Updated layout to match the ClassCompass style: pinned logo, centered text & dropdown */}
+      {/* Header Section */}
+      <header className="w-full bg-blue-100 border-2 border-yellow-500 py-8 px-8 shadow-md relative flex justify-center">
+        {/* Logo pinned on the left (absolute positioning) */}
+        <img
+          src="/logo.png"
+          alt="ClassCompass Logo"
+          className="w-40 h-40 absolute left-8 top-1/2 transform -translate-y-1/2"
+        />
 
-        {/* Centered Course Info - Absolute Centering */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+        {/* Centered Course Info */}
+        <div className="flex flex-col items-center text-center">
+          {/* Keep the original text */}
           <h1 className="text-4xl font-bold text-gray-900">CSCI 1100</h1>
           <p className="text-2xl text-gray-700">Intro to Computer Science</p>
 
-          {/* Dropdown for Past Syllabi */}
+          {/* Keep the original dropdown code */}
           <div className="relative mt-4">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -60,6 +65,7 @@ const CoursePage = () => {
         </div>
       </header>
 
+
       {/* Main Content Wrapper */}
       <div className="max-w-6xl mx-auto p-6">
         {/* Course Stats Section */}
@@ -75,7 +81,7 @@ const CoursePage = () => {
                   selectedCourseStats[index] ? "bg-gray-200" : "bg-white hover:bg-gray-200"
                 }`}
               >
-                <div className="text-blue-500 text-2xl flex-shrink-0 self-center mr-4">{stat.icon}</div> {/* Bigger icon, aligned left */}
+                <div className="text-blue-500 text-2xl flex-shrink-0 self-center mr-4">{stat.icon}</div>
                 <div>
                   <h3 className="font-semibold text-lg">{stat.title}</h3>
                   <p className="text-sm text-gray-500">{stat.description}</p>
