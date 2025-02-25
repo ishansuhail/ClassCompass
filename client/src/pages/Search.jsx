@@ -9,28 +9,31 @@ export default function ClassCompass() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header Section */}
-      <div className="w-full bg-blue-100 border-2 border-yellow-500 py-8 px-8 shadow-md flex items-start">
-        {/* Logo on the left */}
-        <img src="/logo.png" alt="ClassCompass Logo" className="w-40 h-40 mr-6" />
+      {/* Use a relative container + absolute positioning for the logo, 
+          and center the text + search bar within. */}
+      <div className="w-full bg-blue-100 border-2 border-yellow-500 py-8 px-8 shadow-md relative flex justify-center">
+        {/* Logo (pinned on the left) */}
+        <img
+          src="/logo.png"
+          alt="ClassCompass Logo"
+          className="w-40 h-40 absolute left-8 top-1/2 transform -translate-y-1/2"
+        />
 
-        {/* Centered Header Text + Centered Search Bar */}
-        <div className="flex flex-col items-center w-full">
-          {/* Header Text with additional spacing between lines */}
-          <h1 className="text-4xl font-bold text-gray-900">
-            Rensselaer Polytechnic Institute Class Compass
-          </h1>
+        {/* Centered Header Text and Search Bar */}
+        <div className="flex flex-col items-center text-center">
+          <h1 className="text-4xl font-bold text-gray-900">RPI Class Compass</h1>
           <p className="text-2xl text-gray-700 mt-2">Search for your class below</p>
 
-          {/* Search Bar + Button */}
+          {/* Larger Search Bar + Button */}
           <div className="mt-6 flex items-center space-x-2">
             <input
               type="text"
               placeholder="Search for a class name or course-code..."
-              className="w-96 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-[400px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="bg-white text-gray-700 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-200">
+            <button className="bg-white text-gray-700 text-xl px-10 py-3 border border-gray-300 rounded-lg hover:bg-gray-200">
               Search
             </button>
           </div>
@@ -38,7 +41,7 @@ export default function ClassCompass() {
       </div>
 
       {/* Results Section: Wider container for bigger cards */}
-      <div className="mt-8 w-full max-w-6xl mx-auto">
+      <div className="mt-8 w-full max-w-6xl mx-auto p-6">
         {/* Single row for "Search Results" + subtext + "Add Filters" */}
         <div className="flex items-center justify-between mb-4">
           <div>
