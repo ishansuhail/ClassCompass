@@ -29,7 +29,9 @@ app.listen(PORT, () => {
 });
 
 app.post('/api/search', async (req, res) => {
-  const { searchTerm } = req.body;
+
+
+  const searchTerm  = req.body['search'];
   console.log(searchTerm);
   
   try {
@@ -43,6 +45,7 @@ app.post('/api/search', async (req, res) => {
       }
       
       res.json({ success: true, data });
+
   } catch (error) {
       console.error('Search error:', error.message);
       res.status(500).json({ success: false, error: error.message });
@@ -86,6 +89,6 @@ async function fetchData() {
 
 // Call fetchData and log its result
 // Note: This will initially log a pending Promise because fetchData is asynchronous
-console.log(fetchData());
+
 
 
