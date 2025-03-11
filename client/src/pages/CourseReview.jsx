@@ -49,6 +49,22 @@ const CoursePage = () => {
     setFormStep(2); // Move to the next step
   };
 
+  const [assessmentWeights, setAssessmentWeights] = useState({});
+  const [totalWeight, setTotalWeight] = useState(0);
+
+  const handleWeightChange = (assessment, value) => {
+    let weight = parseFloat(value) || 0; // Ensure input is a number or defaults to 0
+    let newWeights = { ...assessmentWeights, [assessment]: weight };
+
+    let sum = Object.values(newWeights).reduce((acc, val) => acc + val, 0);
+
+    // Prevent weight from exceeding 100%
+    if (sum > 100) return;
+
+    setAssessmentWeights(newWeights);
+    setTotalWeight(sum);
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -174,7 +190,7 @@ const CoursePage = () => {
                         type="number"
                         min="1"
                         placeholder="[Optional] How many?"
-                        className="ml-4 p-1 border rounded w-20 text-center"
+                        className="ml-4 p-1 border rounded w-auto text-center"
                         value={assessmentCounts[assessment] || ""}
                         onChange={(e) => handleCountChange(assessment, e.target.value)}
                       />
@@ -191,10 +207,34 @@ const CoursePage = () => {
 
           {formStep === 2 && (
             <div className="mt-4 max-w-md mx-auto">
-              <h3 className="text-lg font-semibold text-gray-900">Now, distribute the weight for each category.</h3>
-              <p className="mt-2 text-gray-600">We will design this part next.</p>
+              <h3 className="text-lg font-semibold text-gray-900">Distribute the weight for each category</h3>
+              <p className="mt-2 text-gray-600">Total must equal 100%.</p>
+
+              <div className="space-y-3 mt-4">
+                {Object.keys(selectedAssessments).map((assessment) =>
+                  selectedAssessments[assessment] ? (
+                    <div key={assessment} className="flex justify-between items-center">
+                      <label className="text-gray-800">{assessment}</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={assessmentWeights[assessment] || ""}
+                        onChange={(e) => handleWeightChange(assessment, e.target.value)}
+                        className="p-1 border rounded w-20 text-center"
+                      />
+                    </div>
+                  ) : null
+                )}
+              </div>
+
+              <p className={`mt-2 ${totalWeight === 100 ? "text-green-600" : "text-red-600"}`}>
+                Total: {totalWeight}% {totalWeight !== 100 && "(Must equal 100%)"}
+              </p>
             </div>
           )}
+
         </section>
 
       </div>
