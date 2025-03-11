@@ -1,10 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-const classes = Array(6).fill("XXXX-XXXX");
+
 
 export default function ClassCompass() {
   const [search, setSearch] = useState("");
+  const [classes, setClasses] = useState([]);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      const response = await fetch('/api/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ search })
+      });
+      const { data } = await response.json();
+      const topResults = data.slice(0, 10);
+      setClasses(topResults);
+    };
+
+    fetchResults();
+  }, [search]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -53,14 +71,23 @@ export default function ClassCompass() {
           </button>
         </div>
 
-        {/* Class Cards (full width in a wider container) */}
-        <div className="space-y-2">
-          {classes.map((course, index) => (
+        {/* Class Cards */}
+        <div className="mt-4 space-y-2">
+          {classes.map((course) => (
             <div
-              key={index}
-              className="cursor-pointer w-full bg-white border border-gray-300 rounded-lg shadow-sm p-6 flex justify-between items-center hover:bg-gray-100"
+              key={course.section_id}
+              className="cursor-pointer bg-white border border-gray-300 rounded-lg shadow-sm p-4 flex justify-between items-center hover:bg-gray-100"
             >
-              {course}
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{course.course_code}</span>
+                  <span className="text-gray-600">|</span>
+                  <span className="font-medium">{course.name}</span>
+                </div>
+                <div className="text-sm text-gray-600">
+                  <span>{course.section} • {course.semester} • {course.school}</span>
+                </div>
+              </div>
               <ChevronDown size={20} />
             </div>
           ))}
