@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-
-
 export default function ClassCompass() {
   const [search, setSearch] = useState("");
   const [classes, setClasses] = useState([]);
   const [showFilterPanel, setShowFilterPanel] = useState(false);
 
+  // Accordion states (one for each filter section)
+  const [openCourseCode, setOpenCourseCode] = useState(false);
+  const [openCourseLevel, setOpenCourseLevel] = useState(false);
+  const [openTerm, setOpenTerm] = useState(false);
+  const [openYear, setOpenYear] = useState(false);
+  const [openSchool, setOpenSchool] = useState(false);
+
   useEffect(() => {
     const fetchResults = async () => {
-      const response = await fetch('/api/search', {
-        method: 'POST',
+      const response = await fetch("/api/search", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ search })
+        body: JSON.stringify({ search }),
       });
       const { data } = await response.json();
       const topResults = data.slice(0, 10);
@@ -28,8 +33,6 @@ export default function ClassCompass() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header Section */}
-      {/* Use a relative container + absolute positioning for the logo, 
-          and center the text + search bar within. */}
       <div className="w-full bg-blue-100 border-2 border-yellow-500 py-8 px-8 shadow-md relative flex justify-center">
         {/* Logo (pinned on the left) */}
         <img
@@ -59,9 +62,8 @@ export default function ClassCompass() {
         </div>
       </div>
 
-      {/* Results Section: Wider container for bigger cards */}
+      {/* Results Section */}
       <div className="mt-8 w-full max-w-6xl mx-auto p-6">
-        {/* Single row for "Search Results" + subtext + "Add Filters" */}
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-2xl font-semibold text-gray-900 text-left">Search Results</h2>
@@ -117,146 +119,215 @@ export default function ClassCompass() {
           </button>
         </div>
       </div>
-      
-    {/* --- Filter Panel Drawer --- */}
-    {showFilterPanel && (
-        <div
-          className="
-            fixed 
-            top-0 
-            right-0 
-            h-full 
-            w-64 
-            bg-white 
-            shadow-xl 
-            border-l 
-            border-gray-300 
-            p-4
-            flex 
-            flex-col
-            z-50
-          "
-        >
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Filters</h3>
+
+      {/* --- Filter Panel Drawer with Transition --- */}
+      <div
+        className={`
+          fixed 
+          top-0 
+          right-0 
+          h-full 
+          w-80  /* Make panel wider */
+          bg-white 
+          shadow-xl 
+          border-l 
+          border-gray-300 
+          z-50
+          transform 
+          transition-transform 
+          duration-300 
+          ease-out
+          flex 
+          flex-col 
+          p-6
+          items-center      /* Center content horizontally */
+          ${showFilterPanel ? "translate-x-0" : "translate-x-full"}
+        `}
+      >
+        {/* Panel Header */}
+        <div className="flex justify-between items-center mb-6 w-full">
+          <h3 className="text-2xl font-semibold">Filters</h3>
+          <button
+            className="text-gray-500 hover:text-gray-700 text-xl"
+            onClick={() => setShowFilterPanel(false)}
+          >
+            Close
+          </button>
+        </div>
+
+        {/* Filter Accordions */}
+        <div className="w-full text-xl space-y-6 text-left">
+          {/* 1) Course Code */}
+          <div>
             <button
-              className="text-gray-500 hover:text-gray-700"
-              onClick={() => setShowFilterPanel(false)}
+              onClick={() => setOpenCourseCode((prev) => !prev)}
+              className="flex justify-between w-full items-center font-semibold"
             >
-              Close
-            </button>
-          </div>
-
-          {/* Filter Options */}
-          <div className="space-y-4">
-            {/* 1) Course Code */}
-            <div>
-              <input
-                type="checkbox"
-                id="filterCourseCode"
-                className="mr-2"
-                // onChange={() => ... handle logic}
+              <span>Course Code</span>
+              <ChevronDown
+                size={24}
+                className={`transition-transform duration-200 ${
+                  openCourseCode ? "rotate-180" : ""
+                }`}
               />
-              <label htmlFor="filterCourseCode">Course Code</label>
-            </div>
-
-            {/* 2) Course Level */}
-            <div>
-              <p className="font-semibold mb-2">Course Level</p>
-              <div className="flex flex-col space-y-1 ml-2">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  1XXX
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  2XXX
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  3XXX
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  4XXX
+            </button>
+            {openCourseCode && (
+              <div className="mt-2 ml-2">
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>Filter by Course Code</span>
                 </label>
               </div>
-            </div>
-
-            {/* 3) Term */}
-            <div>
-              <p className="font-semibold mb-2">Term</p>
-              <div className="flex flex-col space-y-1 ml-2">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  Spring
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  Fall
-                </label>
-              </div>
-            </div>
-
-            {/* 4) Year */}
-            <div>
-              <p className="font-semibold mb-2">Year</p>
-              <div className="flex flex-col space-y-1 ml-2">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  2023
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  2024
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  2025
-                </label>
-              </div>
-            </div>
-
-            {/* 5) School */}
-            <div>
-              <p className="font-semibold mb-2">School</p>
-              <div className="flex flex-col space-y-1 ml-2">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  HASS
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  Architecture
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  Lally School of Business
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  School of Science
-                </label>
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  School of Engineering
-                </label>
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* Apply/Reset Buttons (optional) */}
-          <div className="mt-auto pt-4">
-            <button className="w-full py-2 mb-2 border rounded hover:bg-gray-100">
-              Apply Filters
+          {/* 2) Course Level */}
+          <div>
+            <button
+              onClick={() => setOpenCourseLevel((prev) => !prev)}
+              className="flex justify-between w-full items-center font-semibold"
+            >
+              <span>Course Level</span>
+              <ChevronDown
+                size={24}
+                className={`transition-transform duration-200 ${
+                  openCourseLevel ? "rotate-180" : ""
+                }`}
+              />
             </button>
-            <button className="w-full py-2 border rounded hover:bg-gray-100">
-              Reset Filters
+            {openCourseLevel && (
+              <div className="mt-2 ml-2 space-y-2">
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>1XXX</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>2XXX</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>3XXX</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>4XXX</span>
+                </label>
+              </div>
+            )}
+          </div>
+
+          {/* 3) Term */}
+          <div>
+            <button
+              onClick={() => setOpenTerm((prev) => !prev)}
+              className="flex justify-between w-full items-center font-semibold"
+            >
+              <span>Term</span>
+              <ChevronDown
+                size={24}
+                className={`transition-transform duration-200 ${
+                  openTerm ? "rotate-180" : ""
+                }`}
+              />
             </button>
+            {openTerm && (
+              <div className="mt-2 ml-2 space-y-2">
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>Spring</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>Fall</span>
+                </label>
+              </div>
+            )}
+          </div>
+
+          {/* 4) Year */}
+          <div>
+            <button
+              onClick={() => setOpenYear((prev) => !prev)}
+              className="flex justify-between w-full items-center font-semibold"
+            >
+              <span>Year</span>
+              <ChevronDown
+                size={24}
+                className={`transition-transform duration-200 ${
+                  openYear ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+            {openYear && (
+              <div className="mt-2 ml-2 space-y-2">
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>2023</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>2024</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>2025</span>
+                </label>
+              </div>
+            )}
+          </div>
+
+          {/* 5) School */}
+          <div>
+            <button
+              onClick={() => setOpenSchool((prev) => !prev)}
+              className="flex justify-between w-full items-center font-semibold"
+            >
+              <span>School</span>
+              <ChevronDown
+                size={24}
+                className={`transition-transform duration-200 ${
+                  openSchool ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+            {openSchool && (
+              <div className="mt-2 ml-2 space-y-2">
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>HASS</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>Architecture</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>Lally School of Business</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>School of Science</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span>School of Engineering</span>
+                </label>
+              </div>
+            )}
           </div>
         </div>
-      )}
 
+        {/* Apply/Reset Buttons */}
+        <div className="mt-auto pt-8 w-full">
+          <button className="w-full py-3 mb-2 border rounded hover:bg-gray-100 text-xl">
+            Apply Filters
+          </button>
+          <button className="w-full py-3 border rounded hover:bg-gray-100 text-xl">
+            Reset Filters
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
