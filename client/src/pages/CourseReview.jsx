@@ -26,6 +26,30 @@ const CoursePage = () => {
     }));
   };
 
+  const [formStep, setFormStep] = useState(1); // Tracks which step of the form we are on
+  const [selectedAssessments, setSelectedAssessments] = useState({});
+  const [assessmentCounts, setAssessmentCounts] = useState({});
+  const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam"];
+
+  const toggleAssessment = (assessment) => {
+    setSelectedAssessments((prev) => ({
+      ...prev,
+      [assessment]: !prev[assessment] // Toggle selection
+    }));
+  };
+
+  const handleCountChange = (assessment, value) => {
+    setAssessmentCounts((prev) => ({
+      ...prev,
+      [assessment]: value
+    }));
+  };
+
+  const handleNextStep = () => {
+    setFormStep(2); // Move to the next step
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header Section */}
@@ -129,44 +153,50 @@ const CoursePage = () => {
         <section className="bg-blue-100 p-6 rounded-lg border border-yellow-500 mt-8">
           <h2 className="text-2xl font-bold text-center">Submit Course Statistics</h2>
           <p className="text-gray-700 text-center">Share your experience and course details</p>
-          <form className="mt-4 space-y-4 max-w-md mx-auto">
-            <div>
-              <label htmlFor="attendance" className="block text-sm font-medium text-gray-700">
-                Attendance
-              </label>
-              <select id="attendance" className="mt-1 block w-full p-2 border rounded">
-                <option value="">Select Attendance Requirement</option>
-                <option value="required">Required</option>
-                <option value="not_required">Not Required</option>
-              </select>
+
+          {formStep === 1 && (
+            <div className="mt-4 max-w-md mx-auto">
+              <h3 className="text-lg font-semibold text-gray-900">What does the class have?</h3>
+              <div className="flex flex-col space-y-2 mt-3">
+                {assessments.map((assessment) => (
+                  <div key={assessment} className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      id={assessment}
+                      checked={!!selectedAssessments[assessment]}
+                      onChange={() => toggleAssessment(assessment)}
+                      className="w-5 h-5"
+                    />
+                    <label htmlFor={assessment} className="text-gray-800">{assessment}</label>
+                    
+                    {selectedAssessments[assessment] && assessment !== "Final Exam" && (
+                      <input
+                        type="number"
+                        min="1"
+                        placeholder="[Optional] How many?"
+                        className="ml-4 p-1 border rounded w-20 text-center"
+                        value={assessmentCounts[assessment] || ""}
+                        onChange={(e) => handleCountChange(assessment, e.target.value)}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={handleNextStep} className="w-full px-4 py-2 mt-4 bg-black text-white rounded">
+                Next
+              </button>
             </div>
-            <div>
-              <label htmlFor="exams" className="block text-sm font-medium text-gray-700">
-                Exams
-              </label>
-              <input
-                id="exams"
-                type="text"
-                placeholder="Exam weight, difficulty, etc."
-                className="w-full p-2 border rounded"
-              />
+          )}
+
+          {formStep === 2 && (
+            <div className="mt-4 max-w-md mx-auto">
+              <h3 className="text-lg font-semibold text-gray-900">Now, distribute the weight for each category.</h3>
+              <p className="mt-2 text-gray-600">We will design this part next.</p>
             </div>
-            <div>
-              <label htmlFor="homework" className="block text-sm font-medium text-gray-700">
-                Homework
-              </label>
-              <input
-                id="homework"
-                type="text"
-                placeholder="Homework frequency and difficulty"
-                className="w-full p-2 border rounded"
-              />
-            </div>
-            <button type="submit" className="w-full px-4 py-2 bg-black text-white rounded">
-              Submit
-            </button>
-          </form>
+          )}
         </section>
+
       </div>
     </div>
   );
