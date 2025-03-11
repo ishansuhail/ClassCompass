@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react";
 export default function ClassCompass() {
   const [search, setSearch] = useState("");
   const [classes, setClasses] = useState([]);
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -66,7 +67,10 @@ export default function ClassCompass() {
             <h2 className="text-2xl font-semibold text-gray-900 text-left">Search Results</h2>
             <p className="text-gray-600 text-left">Click any class to see more information</p>
           </div>
-          <button className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200">
+          <button
+            className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200"
+            onClick={() => setShowFilterPanel(true)}
+          >
             Add Filters
           </button>
         </div>
@@ -113,6 +117,146 @@ export default function ClassCompass() {
           </button>
         </div>
       </div>
+      
+    {/* --- Filter Panel Drawer --- */}
+    {showFilterPanel && (
+        <div
+          className="
+            fixed 
+            top-0 
+            right-0 
+            h-full 
+            w-64 
+            bg-white 
+            shadow-xl 
+            border-l 
+            border-gray-300 
+            p-4
+            flex 
+            flex-col
+            z-50
+          "
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Filters</h3>
+            <button
+              className="text-gray-500 hover:text-gray-700"
+              onClick={() => setShowFilterPanel(false)}
+            >
+              Close
+            </button>
+          </div>
+
+          {/* Filter Options */}
+          <div className="space-y-4">
+            {/* 1) Course Code */}
+            <div>
+              <input
+                type="checkbox"
+                id="filterCourseCode"
+                className="mr-2"
+                // onChange={() => ... handle logic}
+              />
+              <label htmlFor="filterCourseCode">Course Code</label>
+            </div>
+
+            {/* 2) Course Level */}
+            <div>
+              <p className="font-semibold mb-2">Course Level</p>
+              <div className="flex flex-col space-y-1 ml-2">
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  1XXX
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  2XXX
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  3XXX
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  4XXX
+                </label>
+              </div>
+            </div>
+
+            {/* 3) Term */}
+            <div>
+              <p className="font-semibold mb-2">Term</p>
+              <div className="flex flex-col space-y-1 ml-2">
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  Spring
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  Fall
+                </label>
+              </div>
+            </div>
+
+            {/* 4) Year */}
+            <div>
+              <p className="font-semibold mb-2">Year</p>
+              <div className="flex flex-col space-y-1 ml-2">
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  2023
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  2024
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  2025
+                </label>
+              </div>
+            </div>
+
+            {/* 5) School */}
+            <div>
+              <p className="font-semibold mb-2">School</p>
+              <div className="flex flex-col space-y-1 ml-2">
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  HASS
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  Architecture
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  Lally School of Business
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  School of Science
+                </label>
+                <label>
+                  <input type="checkbox" className="mr-2" />
+                  School of Engineering
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Apply/Reset Buttons (optional) */}
+          <div className="mt-auto pt-4">
+            <button className="w-full py-2 mb-2 border rounded hover:bg-gray-100">
+              Apply Filters
+            </button>
+            <button className="w-full py-2 border rounded hover:bg-gray-100">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
