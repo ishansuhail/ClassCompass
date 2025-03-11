@@ -1,5 +1,6 @@
 // Import the Supabase client instance from db.js
 const supabase = require('./db.js');
+console.log(supabase);
 
 // Import Express.js to set up the server
 const express = require('express');
@@ -89,6 +90,4 @@ async function fetchData() {
 
 // Call fetchData and log its result
 // Note: This will initially log a pending Promise because fetchData is asynchronous
-
-
-
+fetchData();
