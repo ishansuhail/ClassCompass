@@ -87,6 +87,9 @@ async function fetchData() {
     }
 }
 
+
+
+
 // Call fetchData and log its result
 // Note: This will initially log a pending Promise because fetchData is asynchronous
 
