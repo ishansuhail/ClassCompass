@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { GrCalendar, GrBarChart, GrCertificate, GrCatalog } from "react-icons/gr"; // Importing new icons
 
 const CoursePage = () => {
@@ -66,6 +67,15 @@ const CoursePage = () => {
   };
 
 
+  const location = useLocation();
+  const course = location.state?.course;
+
+  useEffect(() => {
+
+    console.log(course)
+  })
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header Section */}
@@ -82,8 +92,8 @@ const CoursePage = () => {
         {/* Centered Course Info */}
         <div className="flex flex-col items-center text-center">
           {/* Keep the original text */}
-          <h1 className="text-4xl font-bold text-gray-900">CSCI 1100</h1>
-          <p className="text-2xl text-gray-700">Intro to Computer Science</p>
+          <h1 className="text-4xl font-bold text-gray-900">{course.course_code}</h1>
+          <p className="text-2xl text-gray-700">{course.name}</p>
 
           {/* Keep the original dropdown code */}
           <div className="relative mt-4">

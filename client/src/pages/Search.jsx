@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function ClassCompass() {
   const [search, setSearch] = useState("");
@@ -12,6 +13,8 @@ export default function ClassCompass() {
   const [openTerm, setOpenTerm] = useState(false);
   const [openYear, setOpenYear] = useState(false);
   const [openSchool, setOpenSchool] = useState(false);
+
+  const naivgate = useNavigate()
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -29,6 +32,12 @@ export default function ClassCompass() {
 
     fetchResults();
   }, [search]);
+
+
+  const goToCourseReveiw = (course) => {
+    console.log("This is the course ", course)
+    naivgate('/CourseReview', { state: { course } })
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -82,6 +91,7 @@ export default function ClassCompass() {
           {classes.map((course) => (
             <div
               key={course.section_id}
+              onClick = {() => goToCourseReveiw(course)}
               className="cursor-pointer bg-white border border-gray-300 rounded-lg shadow-sm p-4 flex justify-between items-center hover:bg-gray-100"
             >
               <div className="flex flex-col">
