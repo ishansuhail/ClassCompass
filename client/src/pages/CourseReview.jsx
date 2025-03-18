@@ -30,7 +30,7 @@ const CoursePage = () => {
   const [formStep, setFormStep] = useState(1); // Tracks which step of the form we are on
   const [selectedAssessments, setSelectedAssessments] = useState({});
   const [assessmentCounts, setAssessmentCounts] = useState({});
-  const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam"];
+  const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam", "Projects", "Other"];
 
   const toggleAssessment = (assessment) => {
     setSelectedAssessments((prev) => ({
@@ -182,7 +182,7 @@ const CoursePage = () => {
 
           {formStep === 1 && (
             <div className="mt-4 max-w-md mx-auto">
-              <h3 className="text-lg font-semibold text-gray-900">What does the class have?</h3>
+              <h3 className="text-lg font-semibold text-gray-900">What is counted for a grade?</h3>
               <div className="flex flex-col space-y-2 mt-3">
                 {assessments.map((assessment) => (
                   <div key={assessment} className="flex items-center space-x-3">
@@ -194,8 +194,8 @@ const CoursePage = () => {
                       className="w-5 h-5"
                     />
                     <label htmlFor={assessment} className="text-gray-800">{assessment}</label>
-                    
-                    {selectedAssessments[assessment] && assessment !== "Final Exam" && (
+
+                    {selectedAssessments[assessment] && assessment !== "Final Exam" && assessment !== "Other" && (
                       <input
                         type="number"
                         min="1"
@@ -203,6 +203,16 @@ const CoursePage = () => {
                         className="ml-4 p-1 border rounded w-auto text-center"
                         value={assessmentCounts[assessment] || ""}
                         onChange={(e) => handleCountChange(assessment, e.target.value)}
+                      />
+                    )}
+
+                    {assessment === "Other" && selectedAssessments[assessment] && (
+                      <input
+                        type="text"
+                        placeholder="Specify assessment type"
+                        className="ml-4 p-1 border rounded w-auto text-center"
+                        value={assessmentCounts["Other"] || ""}
+                        onChange={(e) => handleCountChange("Other", e.target.value)}
                       />
                     )}
                   </div>
