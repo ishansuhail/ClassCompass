@@ -5,16 +5,47 @@ import { useNavigate } from "react-router-dom";
 export default function ClassCompass() {
   const [search, setSearch] = useState("");
   const [classes, setClasses] = useState([]);
+  const [filteredClasses, setFilteredClasses] = useState([]);
   const [showFilterPanel, setShowFilterPanel] = useState(false);
 
-  // Accordion states (one for each filter section)
+  // Accordion open/close states
   const [openCourseCode, setOpenCourseCode] = useState(false);
   const [openCourseLevel, setOpenCourseLevel] = useState(false);
   const [openTerm, setOpenTerm] = useState(false);
   const [openYear, setOpenYear] = useState(false);
   const [openSchool, setOpenSchool] = useState(false);
 
-  const naivgate = useNavigate()
+  // Filter states
+  const [courseCodeFilter, setCourseCodeFilter] = useState(false);
+
+  const [courseLevelFilters, setCourseLevelFilters] = useState({
+    "1XXX": false,
+    "2XXX": false,
+    "3XXX": false,
+    "4XXX": false,
+    "6XXX": false,
+  });
+
+  const [termFilters, setTermFilters] = useState({
+    Spring: false,
+    Fall: false,
+  });
+
+  const [yearFilters, setYearFilters] = useState({
+    "2023": false,
+    "2024": false,
+    "2025": false,
+  });
+
+  const [schoolFilters, setSchoolFilters] = useState({
+    "Humanities, Arts & Soc Sci": false,
+    "School of Architecture": false,
+    "Lally School of Mgt & Tech": false,
+    "School of Science": false,
+    "School of Engineering": false,
+  });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -28,16 +59,126 @@ export default function ClassCompass() {
       const { data } = await response.json();
       const topResults = data.slice(0, 10);
       setClasses(topResults);
+      setFilteredClasses(topResults);
     };
 
     fetchResults();
   }, [search]);
 
+  // Filter change handlers
+  const handleCourseLevelChange = (level) => {
+    setCourseLevelFilters({
+      ...courseLevelFilters,
+      [level]: !courseLevelFilters[level],
+    });
+  };
+
+  const handleTermChange = (term) => {
+    setTermFilters({
+      ...termFilters,
+      [term]: !termFilters[term],
+    });
+  };
+
+  const handleYearChange = (year) => {
+    setYearFilters({
+      ...yearFilters,
+      [year]: !yearFilters[year],
+    });
+  };
+
+  const handleSchoolChange = (school) => {
+    setSchoolFilters({
+      ...schoolFilters,
+      [school]: !schoolFilters[school],
+    });
+  };
+
+  // Reset all filters
+  const resetFilters = () => {
+    setCourseCodeFilter(false);
+    setCourseLevelFilters({
+      "1XXX": false,
+      "2XXX": false,
+      "3XXX": false,
+      "4XXX": false,
+    });
+    setTermFilters({
+      Spring: false,
+      Fall: false,
+    });
+    setYearFilters({
+      "2023": false,
+      "2024": false,
+      "2025": false,
+    });
+    setSchoolFilters({
+      HASS: false,
+      Architecture: false,
+      "Lally School of Business": false,
+      "School of Science": false,
+      "School of Engineering": false,
+    });
+
+    // Reset to original results
+    setFilteredClasses(classes);
+  };
+
+  // Apply filters
+  const applyFilters = () => {
+    let results = [...classes];
+
+    // Filter by course level
+    const selectedLevels = Object.entries(courseLevelFilters)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([level]) => level);
+
+    if (selectedLevels.length > 0) {
+      results = results.filter((course) => {
+        const levelMatch = course.course_code.match(/\d{1}/);
+        const courseLevel = levelMatch ? `${levelMatch[0]}XXX` : "";
+        return selectedLevels.includes(courseLevel);
+      });
+    }
+
+    // Filter by term
+    const selectedTerms = Object.entries(termFilters)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([term]) => term);
+
+    if (selectedTerms.length > 0) {
+      results = results.filter((course) =>
+        selectedTerms.includes(course.semester.split(" ")[0])
+      );
+    }
+
+    // Filter by year
+    const selectedYears = Object.entries(yearFilters)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([year]) => year);
+
+    if (selectedYears.length > 0) {
+      results = results.filter((course) =>
+        selectedYears.includes(course.semester.split(" ")[1])
+      );
+    }
+
+    // Filter by school
+    const selectedSchools = Object.entries(schoolFilters)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([school]) => school);
+
+    if (selectedSchools.length > 0) {
+      results = results.filter((course) => selectedSchools.includes(course.school));
+    }
+
+    setFilteredClasses(results);
+    setShowFilterPanel(false);
+  };
 
   const goToCourseReveiw = (course) => {
-    console.log("This is the course ", course)
-    naivgate('/CourseReview', { state: { course } })
-  }
+    navigate("/CourseReview", { state: { course } });
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -88,10 +229,10 @@ export default function ClassCompass() {
 
         {/* Class Cards */}
         <div className="mt-4 space-y-2">
-          {classes.map((course) => (
+          {filteredClasses.map((course) => (
             <div
               key={course.section_id}
-              onClick = {() => goToCourseReveiw(course)}
+              onClick={() => goToCourseReveiw(course)}
               className="cursor-pointer bg-white border border-gray-300 rounded-lg shadow-sm p-4 flex justify-between items-center hover:bg-gray-100"
             >
               <div className="flex flex-col">
@@ -101,7 +242,9 @@ export default function ClassCompass() {
                   <span className="font-medium">{course.name}</span>
                 </div>
                 <div className="text-sm text-gray-600">
-                  <span>{course.section} • {course.semester} • {course.school}</span>
+                  <span>
+                    {course.section} • {course.semester} • {course.school}
+                  </span>
                 </div>
               </div>
               <ChevronDown size={20} />
@@ -138,7 +281,7 @@ export default function ClassCompass() {
           right-0 
           h-full 
           w-96 
-          bg-white 
+          bg-white  /* Panel background */
           text-gray-900  
           shadow-xl 
           border-l 
@@ -168,6 +311,7 @@ export default function ClassCompass() {
 
         {/* Filter Accordions */}
         <div className="w-full text-xl space-y-6 text-left">
+
           {/* 1) Course Code */}
           <div className="border border-gray-200 rounded-md">
             <button
@@ -178,11 +322,11 @@ export default function ClassCompass() {
                 w-full
                 items-center
                 font-semibold
-                bg-gray-100   /* Lighter background */
+                bg-gray-100
                 text-gray-800
-                px-4 
-                py-3         /* More padding */
-                rounded-md
+                px-4
+                py-3
+                rounded-t-md
               "
             >
               <span>Course Code</span>
@@ -194,11 +338,13 @@ export default function ClassCompass() {
               />
             </button>
             {openCourseCode && (
-              <div className="mt-4 ml-4 mb-4 space-y-3">
-                <label className="flex items-center space-x-3">
+              <div className="mt-3 ml-4 mb-3 space-y-3">
+                <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                    checked={courseCodeFilter}
+                    onChange={() => setCourseCodeFilter(!courseCodeFilter)}
                   />
                   <span>Filter by Course Code</span>
                 </label>
@@ -220,7 +366,7 @@ export default function ClassCompass() {
                 text-gray-800
                 px-4
                 py-3
-                rounded-md
+                rounded-t-md
               "
             >
               <span>Course Level</span>
@@ -232,35 +378,18 @@ export default function ClassCompass() {
               />
             </button>
             {openCourseLevel && (
-              <div className="mt-4 ml-4 mb-4 space-y-3">
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>1XXX</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>2XXX</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>3XXX</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>4XXX</span>
-                </label>
+              <div className="mt-3 ml-4 mb-3 space-y-3">
+                {Object.keys(courseLevelFilters).map((level) => (
+                  <label key={level} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                      checked={courseLevelFilters[level]}
+                      onChange={() => handleCourseLevelChange(level)}
+                    />
+                    <span>{level}</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
@@ -279,7 +408,7 @@ export default function ClassCompass() {
                 text-gray-800
                 px-4
                 py-3
-                rounded-md
+                rounded-t-md
               "
             >
               <span>Term</span>
@@ -291,21 +420,18 @@ export default function ClassCompass() {
               />
             </button>
             {openTerm && (
-              <div className="mt-4 ml-4 mb-4 space-y-3">
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>Spring</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>Fall</span>
-                </label>
+              <div className="mt-3 ml-4 mb-3 space-y-3">
+                {Object.keys(termFilters).map((term) => (
+                  <label key={term} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                      checked={termFilters[term]}
+                      onChange={() => handleTermChange(term)}
+                    />
+                    <span>{term}</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
@@ -324,7 +450,7 @@ export default function ClassCompass() {
                 text-gray-800
                 px-4
                 py-3
-                rounded-md
+                rounded-t-md
               "
             >
               <span>Year</span>
@@ -336,28 +462,18 @@ export default function ClassCompass() {
               />
             </button>
             {openYear && (
-              <div className="mt-4 ml-4 mb-4 space-y-3">
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>2023</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>2024</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>2025</span>
-                </label>
+              <div className="mt-3 ml-4 mb-3 space-y-3">
+                {Object.keys(yearFilters).map((year) => (
+                  <label key={year} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                      checked={yearFilters[year]}
+                      onChange={() => handleYearChange(year)}
+                    />
+                    <span>{year}</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
@@ -376,7 +492,7 @@ export default function ClassCompass() {
                 text-gray-800
                 px-4
                 py-3
-                rounded-md
+                rounded-t-md
               "
             >
               <span>School</span>
@@ -388,42 +504,18 @@ export default function ClassCompass() {
               />
             </button>
             {openSchool && (
-              <div className="mt-4 ml-4 mb-4 space-y-3">
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>HASS</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>Architecture</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>Lally School of Business</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>School of Science</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                  />
-                  <span>School of Engineering</span>
-                </label>
+              <div className="mt-3 ml-4 mb-3 space-y-3">
+                {Object.keys(schoolFilters).map((school) => (
+                  <label key={school} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                      checked={schoolFilters[school]}
+                      onChange={() => handleSchoolChange(school)}
+                    />
+                    <span>{school}</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
@@ -431,10 +523,16 @@ export default function ClassCompass() {
 
         {/* Apply/Reset Buttons */}
         <div className="mt-auto pt-8 w-full">
-          <button className="w-full py-3 mb-2 border rounded hover:bg-gray-100 text-xl">
+          <button
+            className="w-full py-3 mb-2 border rounded hover:bg-gray-100 text-xl"
+            onClick={applyFilters}
+          >
             Apply Filters
           </button>
-          <button className="w-full py-3 border rounded hover:bg-gray-100 text-xl">
+          <button
+            className="w-full py-3 border rounded hover:bg-gray-100 text-xl"
+            onClick={resetFilters}
+          >
             Reset Filters
           </button>
         </div>
