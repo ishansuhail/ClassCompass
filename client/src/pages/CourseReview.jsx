@@ -52,18 +52,24 @@ const CoursePage = () => {
 
   const [assessmentWeights, setAssessmentWeights] = useState({});
   const [totalWeight, setTotalWeight] = useState(0);
+  // State to store weight validation errors
+  const [weightError, setWeightError] = useState("");
+  // State to track if user attempted to proceed without meeting conditions
+  const [attemptedNext, setAttemptedNext] = useState(false);
 
+
+  /**
+   * Handles weight input changes for each assessment.
+   * Ensures input is parsed as a number and updates the total weight accordingly.
+   */
   const handleWeightChange = (assessment, value) => {
-    let weight = parseFloat(value) || 0; // Ensure input is a number or defaults to 0
-    let newWeights = { ...assessmentWeights, [assessment]: weight };
+    let weight = parseFloat(value) || 0; // Convert input to a number, default to 0 if empty
+    let newWeights = { ...assessmentWeights, [assessment]: weight }; // Update specific assessment weight
 
-    let sum = Object.values(newWeights).reduce((acc, val) => acc + val, 0);
+    let sum = Object.values(newWeights).reduce((acc, val) => acc + val, 0); // Calculate total weight
 
-    // Prevent weight from exceeding 100%
-    if (sum > 100) return;
-
-    setAssessmentWeights(newWeights);
-    setTotalWeight(sum);
+    setAssessmentWeights(newWeights); // Update state with new weights
+    setTotalWeight(sum); // Update total weight state
   };
 
 
@@ -249,9 +255,55 @@ const CoursePage = () => {
                 )}
               </div>
 
-              <p className={`mt-2 ${totalWeight === 100 ? "text-green-600" : "text-red-600"}`}>
-                Total: {totalWeight}% {totalWeight !== 100 && "(Must equal 100%)"}
-              </p>
+              {/* Show errors only if user attempts to proceed */}
+              {attemptedNext && totalWeight !== 100 && (
+                <p className="mt-2 text-red-600">
+                  {totalWeight > 100
+                    ? "Error: Total weight exceeds 100%. Adjust your entries."
+                    : "Error: Total weight is less than 100%. Make sure all fields add up to 100%."}
+                </p>
+              )}
+
+              {/* Warning if total weight exceeds 100% and some fields are empty */}
+              {attemptedNext && totalWeight > 100 && Object.values(assessmentWeights).some((val) => isNaN(val) || val === 0) && (
+                <p className="mt-1 text-red-600">Error: Some fields are empty while total weight exceeds 100%.</p>
+              )}
+
+              {/* Warning if total is 100% but some fields are still empty */}
+              {attemptedNext && totalWeight === 100 && Object.keys(selectedAssessments).some(
+                (assessment) => selectedAssessments[assessment] && (isNaN(assessmentWeights[assessment]) || assessmentWeights[assessment] === "")
+              ) && (
+                <p className="mt-1 text-red-600">Error: Some fields are empty. Fill in all fields before proceeding.</p>
+              )}
+
+              {/* Warning if any values are 0 or negative */}
+              {attemptedNext && Object.keys(selectedAssessments).some(
+                (assessment) => selectedAssessments[assessment] && assessmentWeights[assessment] <= 0
+              ) && (
+                <p className="mt-1 text-red-600">Error: All values must be greater than 0. Please correct your inputs.</p>
+              )}
+
+              {/* Next button to proceed to Step 3 */}
+              <button
+                onClick={() => {
+                  setAttemptedNext(true); // User attempted to proceed
+
+                  // Check if any selected field is empty, 0, or negative
+                  const hasInvalidFields = Object.keys(selectedAssessments).some(
+                    (assessment) => 
+                      selectedAssessments[assessment] && 
+                      (isNaN(assessmentWeights[assessment]) || assessmentWeights[assessment] === "" || assessmentWeights[assessment] <= 0)
+                  );
+
+                  if (totalWeight === 100 && !hasInvalidFields) {
+                    setFormStep(3); // Move to the next step only if valid
+                  }
+                }}
+                className="w-full px-4 py-2 mt-4 bg-black text-white rounded"
+              >
+                Next
+              </button>
+
             </div>
           )}
 
