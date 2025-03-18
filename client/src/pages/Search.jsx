@@ -102,6 +102,7 @@ export default function ClassCompass() {
       "2XXX": false,
       "3XXX": false,
       "4XXX": false,
+      "6XXX": false,
     });
     setTermFilters({
       Spring: false,
@@ -113,9 +114,9 @@ export default function ClassCompass() {
       "2025": false,
     });
     setSchoolFilters({
-      HASS: false,
-      Architecture: false,
-      "Lally School of Business": false,
+      "Humanities, Arts & Soc Sci": false,
+      "School of Architecture": false,
+      "Lally School of Mgt & Tech": false,
       "School of Science": false,
       "School of Engineering": false,
     });
