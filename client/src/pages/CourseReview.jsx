@@ -6,6 +6,7 @@ const CoursePage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedAnalytics, setSelectedAnalytics] = useState({}); // State to track selected analytics buttons
   const [selectedCourseStats, setSelectedCourseStats] = useState({}); // State to track selected course stats buttons
+  const [syllabi, setSyllabi] = useState({});
 
   const courseStats = [
     { title: "Attendance", description: "Details about attendance policies and requirements.", icon: <GrCalendar /> },
@@ -50,6 +51,17 @@ const CoursePage = () => {
     setFormStep(2); // Move to the next step
   };
 
+
+  function formatSemester(semester) {
+    
+    if (typeof semester === 'string' && semester.includes('_')) {
+      const [year, season] = semester.split('_');
+      return `${season} ${year}`;
+    }
+    
+    return semester;
+  }
+
   const [assessmentWeights, setAssessmentWeights] = useState({});
   const [totalWeight, setTotalWeight] = useState(0);
 
@@ -71,10 +83,7 @@ const CoursePage = () => {
   const course = location.state?.course;
 
   useEffect(() => {
-
-    console.log(course)
-
-    
+    setSyllabi(course.sections)
   })
 
 
@@ -108,8 +117,11 @@ const CoursePage = () => {
             {isDropdownOpen && (
               <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-40 bg-white border border-gray-300 rounded shadow-md">
                 <ul className="py-2 text-gray-700">
-                  <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Fall 2024</li>
-                  <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Spring 2024</li>
+                  {syllabi.map((x) =>(
+                    <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">{formatSemester(x.semester)}</li>
+                  ))}
+                  {/* <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Fall 2024</li>
+                  <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Spring 2024</li> */}
                 </ul>
               </div>
             )}

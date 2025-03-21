@@ -57,8 +57,7 @@ export default function ClassCompass() {
       });
       const { data } = await response.json();
       const condensed_data = groupByCourseAndName(data);
-      console.log(condensed_data);
-      const topResults = data.slice(0, 10);
+      const topResults = condensed_data.slice(0, 10);
       setClasses(topResults);
       setFilteredClasses(topResults);
     };
@@ -271,7 +270,7 @@ export default function ClassCompass() {
                   <span className="font-medium">{course.name}</span>
                 </div>
                 <div className="text-sm text-gray-600">
-                  <span>{course.section} • {course.semester} • {course.school}</span>
+                  <span>{course.sections[0].school}</span>
                 </div>
               </div>
               <ChevronDown size={20} />
