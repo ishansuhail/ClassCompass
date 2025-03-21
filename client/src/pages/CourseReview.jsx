@@ -73,6 +73,8 @@ const CoursePage = () => {
   useEffect(() => {
 
     console.log(course)
+
+    
   })
 
 
