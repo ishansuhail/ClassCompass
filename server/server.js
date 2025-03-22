@@ -18,6 +18,38 @@ app.use(express.json());
 // Serve static files from the React app's build directory
 app.use(express.static(path.join(__dirname, '../client/build')));
 
+// API for getting schools to display on the homepage
+app.get('/api/unique-course-prefixes', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('syllabus_info')
+            .select('course_code, school')
+
+        if (error) {
+            throw error;
+        }
+
+        // Ensure data is not null or undefined before processing
+        if (!data) {
+            return res.json({ success: false, prefixes: [] });
+        }
+
+        // Extract unique coursecode prefixes from data
+        const uniquePrefixesMap = new Map(
+            data.map(item => [item.course_code.split(" ")[0], item.school])
+        );
+        
+        // Convert Map back to an array
+        const uniquePrefixes = [...uniquePrefixesMap.entries()];
+
+        res.json({ success: true, prefixes: uniquePrefixes });
+
+    } catch (error) {
+        console.error('Error fetching course subjects:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Handle all GET requests by sending back the React app's index.html file
 // This ensures React Router can manage client-side routing
 app.get('*', (req, res) => {
@@ -33,7 +65,6 @@ app.post('/api/search', async (req, res) => {
 
 
   const searchTerm  = req.body['search'];
-  console.log(searchTerm);
   
   try {
       const { data, error } = await supabase
@@ -87,9 +118,6 @@ async function fetchData() {
       console.log('Data:', data);  // Log the fetched data to the console
     }
 }
-
-
-
 
 // Call fetchData and log its result
 // Note: This will initially log a pending Promise because fetchData is asynchronous
