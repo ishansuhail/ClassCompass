@@ -57,7 +57,8 @@ export default function ClassCompass() {
         body: JSON.stringify({ search }),
       });
       const { data } = await response.json();
-      const topResults = data.slice(0, 10);
+      const condensed_data = groupByCourseAndName(data);
+      const topResults = condensed_data.slice(0, 10);
       setClasses(topResults);
       setFilteredClasses(topResults);
     };
@@ -65,7 +66,34 @@ export default function ClassCompass() {
     fetchResults();
   }, [search]);
 
-  // Filter change handlers
+
+  function groupByCourseAndName(sections) {
+   
+    const groupedMap = {};
+  
+    sections.forEach((section) => {
+      const { course_code, name } = section;
+      
+      const key = `${course_code}||${name}`;
+  
+      // If this key doesn't exist yet, initialize it
+      if (!groupedMap[key]) {
+        groupedMap[key] = {
+          course_code,
+          name,
+          sections: []
+        };
+      }
+  
+      // Push the current section into the corresponding group
+      groupedMap[key].sections.push(section);
+    });
+  
+    
+    return Object.values(groupedMap);
+  }
+
+  // Handler functions for each filter type
   const handleCourseLevelChange = (level) => {
     setCourseLevelFilters({
       ...courseLevelFilters,
@@ -243,9 +271,7 @@ export default function ClassCompass() {
                   <span className="font-medium">{course.name}</span>
                 </div>
                 <div className="text-sm text-gray-600">
-                  <span>
-                    {course.section} • {course.semester} • {course.school}
-                  </span>
+                  <span>{course.sections[0].school}</span>
                 </div>
               </div>
               <ChevronDown size={20} />
