@@ -30,6 +30,7 @@ const CoursePage = () => {
   const [formStep, setFormStep] = useState(1); // Tracks which step of the form we are on
   const [selectedAssessments, setSelectedAssessments] = useState({});
   const [customAssessments, setCustomAssessments] = useState([""]); // Stores user-defined "Other" options
+  const [customAttemptedNext, setCustomAttemptedNext] = useState(false);
   const [assessmentCounts, setAssessmentCounts] = useState({});
   const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam", "Projects", "Other"];
 
@@ -225,16 +226,6 @@ const CoursePage = () => {
                         onChange={(e) => handleCountChange(assessment, e.target.value)}
                       />
                     )}
-
-                    {assessment === "Other" && selectedAssessments[assessment] && (
-                      <input
-                        type="text"
-                        placeholder="Specify assessment type"
-                        className="ml-4 p-1 border rounded w-auto text-center"
-                        value={assessmentCounts["Other"] || ""}
-                        onChange={(e) => handleCountChange("Other", e.target.value)}
-                      />
-                    )}
                   </div>
                 ))}
               </div>
@@ -261,6 +252,12 @@ const CoursePage = () => {
                     className="w-full p-2 border rounded"
                   />
                 ))}
+
+                {customAttemptedNext && customAssessments.some(name => !name.trim()) && (
+                  <p className="mt-2 text-red-600">
+                    Error: Please fill in all custom assessment names.
+                  </p>
+                )}
               </div>
 
               <button
@@ -271,7 +268,13 @@ const CoursePage = () => {
               </button>
 
               <button
-                onClick={() => setFormStep(2)}
+                onClick={() => {
+                  setCustomAttemptedNext(true);
+                  const hasInvalid = customAssessments.some(name => !name.trim());
+                  if (!hasInvalid) {
+                    setFormStep(2);
+                  }
+                }}
                 className="w-full px-4 py-2 mt-4 bg-black text-white rounded"
               >
                 Next
@@ -285,7 +288,7 @@ const CoursePage = () => {
               <p className="mt-2 text-gray-600">Total must equal 100%.</p>
 
               <div className="space-y-3 mt-4">
-                {[...Object.keys(selectedAssessments), ...customAssessments].map((assessment, index) =>
+                {[...Object.keys(selectedAssessments).filter(a => a !== "Other"), ...customAssessments].map((assessment, index) =>
                   assessment && (
                     <div key={index} className="flex justify-between items-center">
                       <label className="text-gray-800">{assessment}</label>
@@ -319,14 +322,13 @@ const CoursePage = () => {
               )}
 
               {/* Warning if total is 100% but some fields are still empty */}
-              {attemptedNext && totalWeight === 100 && Object.keys(selectedAssessments).some(
+              {attemptedNext && totalWeight === 100 && Object.keys(selectedAssessments).filter(a => a !== "Other").some(
                 (assessment) => selectedAssessments[assessment] && (isNaN(assessmentWeights[assessment]) || assessmentWeights[assessment] === "")
               ) && (
                 <p className="mt-1 text-red-600">Error: Some fields are empty. Fill in all fields before proceeding.</p>
               )}
 
-              {/* Warning if any values are 0 or negative */}
-              {attemptedNext && Object.keys(selectedAssessments).some(
+              {attemptedNext && Object.keys(selectedAssessments).filter(a => a !== "Other").some(
                 (assessment) => selectedAssessments[assessment] && assessmentWeights[assessment] <= 0
               ) && (
                 <p className="mt-1 text-red-600">Error: All values must be greater than 0. Please correct your inputs.</p>
@@ -338,11 +340,11 @@ const CoursePage = () => {
                   setAttemptedNext(true); // User attempted to proceed
 
                   // Check if any selected field is empty, 0, or negative
-                  const hasInvalidFields = Object.keys(selectedAssessments).some(
+                  const hasInvalidFields = Object.keys(selectedAssessments).filter(a => a !== "Other").some(
                     (assessment) => 
                       selectedAssessments[assessment] && 
                       (isNaN(assessmentWeights[assessment]) || assessmentWeights[assessment] === "" || assessmentWeights[assessment] <= 0)
-                  );
+                  );                  
 
                   if (totalWeight === 100 && !hasInvalidFields) {
                     setFormStep(3); // Move to the next step only if valid
