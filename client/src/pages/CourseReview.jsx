@@ -29,6 +29,7 @@ const CoursePage = () => {
 
   const [formStep, setFormStep] = useState(1); // Tracks which step of the form we are on
   const [selectedAssessments, setSelectedAssessments] = useState({});
+  const [customAssessments, setCustomAssessments] = useState([""]); // Stores user-defined "Other" options
   const [assessmentCounts, setAssessmentCounts] = useState({});
   const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam", "Projects", "Other"];
 
@@ -47,8 +48,12 @@ const CoursePage = () => {
   };
 
   const handleNextStep = () => {
-    setFormStep(2); // Move to the next step
-  };
+    if (selectedAssessments["Other"]) {
+      setFormStep(1.5); // If "Other" is selected, go to custom input step
+    } else {
+      setFormStep(2); // Otherwise, proceed as usual
+    }
+  };  
 
   const [assessmentWeights, setAssessmentWeights] = useState({});
   const [totalWeight, setTotalWeight] = useState(0);
@@ -56,7 +61,6 @@ const CoursePage = () => {
   const [weightError, setWeightError] = useState("");
   // State to track if user attempted to proceed without meeting conditions
   const [attemptedNext, setAttemptedNext] = useState(false);
-
 
   /**
    * Handles weight input changes for each assessment.
@@ -72,6 +76,16 @@ const CoursePage = () => {
     setTotalWeight(sum); // Update total weight state
   };
 
+  const handleCustomAssessmentChange = (index, value) => {
+    const updatedCustoms = [...customAssessments];
+    updatedCustoms[index] = value;
+    setCustomAssessments(updatedCustoms);
+  };
+  
+  // Function to add another custom input field
+  const addCustomAssessment = () => {
+    setCustomAssessments([...customAssessments, ""]);
+  };  
 
   const location = useLocation();
   const course = location.state?.course;
@@ -231,15 +245,49 @@ const CoursePage = () => {
             </div>
           )}
 
+          {formStep === 1.5 && (
+            <div className="mt-4 max-w-md mx-auto">
+              <h3 className="text-lg font-semibold text-gray-900">Add Custom Grading Categories</h3>
+              <p className="mt-2 text-gray-600">Since you selected "Other," enter the name(s) of your additional grading components.</p>
+
+              <div className="space-y-2 mt-3">
+                {customAssessments.map((custom, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    placeholder={`Custom Assessment ${index + 1}`}
+                    value={custom}
+                    onChange={(e) => handleCustomAssessmentChange(index, e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={addCustomAssessment}
+                className="mt-3 px-3 py-1 bg-gray-300 text-gray-800 rounded"
+              >
+                + Add Another
+              </button>
+
+              <button
+                onClick={() => setFormStep(2)}
+                className="w-full px-4 py-2 mt-4 bg-black text-white rounded"
+              >
+                Next
+              </button>
+            </div>
+          )}
+
           {formStep === 2 && (
             <div className="mt-4 max-w-md mx-auto">
               <h3 className="text-lg font-semibold text-gray-900">Distribute the weight for each category</h3>
               <p className="mt-2 text-gray-600">Total must equal 100%.</p>
 
               <div className="space-y-3 mt-4">
-                {Object.keys(selectedAssessments).map((assessment) =>
-                  selectedAssessments[assessment] ? (
-                    <div key={assessment} className="flex justify-between items-center">
+                {[...Object.keys(selectedAssessments), ...customAssessments].map((assessment, index) =>
+                  assessment && (
+                    <div key={index} className="flex justify-between items-center">
                       <label className="text-gray-800">{assessment}</label>
                       <input
                         type="number"
@@ -251,8 +299,9 @@ const CoursePage = () => {
                         className="p-1 border rounded w-20 text-center"
                       />
                     </div>
-                  ) : null
+                  )
                 )}
+
               </div>
 
               {/* Show errors only if user attempts to proceed */}
