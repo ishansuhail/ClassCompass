@@ -30,8 +30,10 @@ const CoursePage = () => {
 
   const [formStep, setFormStep] = useState(1); // Tracks which step of the form we are on
   const [selectedAssessments, setSelectedAssessments] = useState({});
+  const [customAssessments, setCustomAssessments] = useState([""]); // Stores user-defined "Other" options
+  const [customAttemptedNext, setCustomAttemptedNext] = useState(false);
   const [assessmentCounts, setAssessmentCounts] = useState({});
-  const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam"];
+  const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam", "Projects", "Other"];
 
   const toggleAssessment = (assessment) => {
     setSelectedAssessments((prev) => ({
@@ -48,8 +50,12 @@ const CoursePage = () => {
   };
 
   const handleNextStep = () => {
-    setFormStep(2); // Move to the next step
-  };
+    if (selectedAssessments["Other"]) {
+      setFormStep(1.5); // If "Other" is selected, go to custom input step
+    } else {
+      setFormStep(2); // Otherwise, proceed as usual
+    }
+  };  
 
 
   function formatSemester(semester) {
@@ -64,20 +70,35 @@ const CoursePage = () => {
 
   const [assessmentWeights, setAssessmentWeights] = useState({});
   const [totalWeight, setTotalWeight] = useState(0);
+  // State to store weight validation errors
+  const [weightError, setWeightError] = useState("");
+  // State to track if user attempted to proceed without meeting conditions
+  const [attemptedNext, setAttemptedNext] = useState(false);
 
+  /**
+   * Handles weight input changes for each assessment.
+   * Ensures input is parsed as a number and updates the total weight accordingly.
+   */
   const handleWeightChange = (assessment, value) => {
-    let weight = parseFloat(value) || 0; // Ensure input is a number or defaults to 0
-    let newWeights = { ...assessmentWeights, [assessment]: weight };
+    let weight = parseFloat(value) || 0; // Convert input to a number, default to 0 if empty
+    let newWeights = { ...assessmentWeights, [assessment]: weight }; // Update specific assessment weight
 
-    let sum = Object.values(newWeights).reduce((acc, val) => acc + val, 0);
+    let sum = Object.values(newWeights).reduce((acc, val) => acc + val, 0); // Calculate total weight
 
-    // Prevent weight from exceeding 100%
-    if (sum > 100) return;
-
-    setAssessmentWeights(newWeights);
-    setTotalWeight(sum);
+    setAssessmentWeights(newWeights); // Update state with new weights
+    setTotalWeight(sum); // Update total weight state
   };
 
+  const handleCustomAssessmentChange = (index, value) => {
+    const updatedCustoms = [...customAssessments];
+    updatedCustoms[index] = value;
+    setCustomAssessments(updatedCustoms);
+  };
+  
+  // Function to add another custom input field
+  const addCustomAssessment = () => {
+    setCustomAssessments([...customAssessments, ""]);
+  };  
 
   const location = useLocation();
   const course = location.state?.course;
@@ -196,7 +217,7 @@ const CoursePage = () => {
 
           {formStep === 1 && (
             <div className="mt-4 max-w-md mx-auto">
-              <h3 className="text-lg font-semibold text-gray-900">What does the class have?</h3>
+              <h3 className="text-lg font-semibold text-gray-900">What is counted for a grade?</h3>
               <div className="flex flex-col space-y-2 mt-3">
                 {assessments.map((assessment) => (
                   <div key={assessment} className="flex items-center space-x-3">
@@ -208,8 +229,8 @@ const CoursePage = () => {
                       className="w-5 h-5"
                     />
                     <label htmlFor={assessment} className="text-gray-800">{assessment}</label>
-                    
-                    {selectedAssessments[assessment] && assessment !== "Final Exam" && (
+
+                    {selectedAssessments[assessment] && assessment !== "Final Exam" && assessment !== "Other" && (
                       <input
                         type="number"
                         min="1"
@@ -229,15 +250,61 @@ const CoursePage = () => {
             </div>
           )}
 
+          {formStep === 1.5 && (
+            <div className="mt-4 max-w-md mx-auto">
+              <h3 className="text-lg font-semibold text-gray-900">Add Custom Grading Categories</h3>
+              <p className="mt-2 text-gray-600">Since you selected "Other," enter the name(s) of your additional grading components.</p>
+
+              <div className="space-y-2 mt-3">
+                {customAssessments.map((custom, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    placeholder={`Custom Assessment ${index + 1}`}
+                    value={custom}
+                    onChange={(e) => handleCustomAssessmentChange(index, e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
+                ))}
+
+                {customAttemptedNext && customAssessments.some(name => !name.trim()) && (
+                  <p className="mt-2 text-red-600">
+                    Error: Please fill in all custom assessment names.
+                  </p>
+                )}
+              </div>
+
+              <button
+                onClick={addCustomAssessment}
+                className="mt-3 px-3 py-1 bg-gray-300 text-gray-800 rounded"
+              >
+                + Add Another
+              </button>
+
+              <button
+                onClick={() => {
+                  setCustomAttemptedNext(true);
+                  const hasInvalid = customAssessments.some(name => !name.trim());
+                  if (!hasInvalid) {
+                    setFormStep(2);
+                  }
+                }}
+                className="w-full px-4 py-2 mt-4 bg-black text-white rounded"
+              >
+                Next
+              </button>
+            </div>
+          )}
+
           {formStep === 2 && (
             <div className="mt-4 max-w-md mx-auto">
               <h3 className="text-lg font-semibold text-gray-900">Distribute the weight for each category</h3>
               <p className="mt-2 text-gray-600">Total must equal 100%.</p>
 
               <div className="space-y-3 mt-4">
-                {Object.keys(selectedAssessments).map((assessment) =>
-                  selectedAssessments[assessment] ? (
-                    <div key={assessment} className="flex justify-between items-center">
+                {[...Object.keys(selectedAssessments).filter(a => a !== "Other"), ...customAssessments].map((assessment, index) =>
+                  assessment && (
+                    <div key={index} className="flex justify-between items-center">
                       <label className="text-gray-800">{assessment}</label>
                       <input
                         type="number"
@@ -249,13 +316,59 @@ const CoursePage = () => {
                         className="p-1 border rounded w-20 text-center"
                       />
                     </div>
-                  ) : null
+                  )
                 )}
+
               </div>
 
-              <p className={`mt-2 ${totalWeight === 100 ? "text-green-600" : "text-red-600"}`}>
-                Total: {totalWeight}% {totalWeight !== 100 && "(Must equal 100%)"}
-              </p>
+              {/* Show errors only if user attempts to proceed */}
+              {attemptedNext && totalWeight !== 100 && (
+                <p className="mt-2 text-red-600">
+                  {totalWeight > 100
+                    ? "Error: Total weight exceeds 100%. Adjust your entries."
+                    : "Error: Total weight is less than 100%. Make sure all fields add up to 100%."}
+                </p>
+              )}
+
+              {/* Warning if total weight exceeds 100% and some fields are empty */}
+              {attemptedNext && totalWeight > 100 && Object.values(assessmentWeights).some((val) => isNaN(val) || val === 0) && (
+                <p className="mt-1 text-red-600">Error: Some fields are empty while total weight exceeds 100%.</p>
+              )}
+
+              {/* Warning if total is 100% but some fields are still empty */}
+              {attemptedNext && totalWeight === 100 && Object.keys(selectedAssessments).filter(a => a !== "Other").some(
+                (assessment) => selectedAssessments[assessment] && (isNaN(assessmentWeights[assessment]) || assessmentWeights[assessment] === "")
+              ) && (
+                <p className="mt-1 text-red-600">Error: Some fields are empty. Fill in all fields before proceeding.</p>
+              )}
+
+              {attemptedNext && Object.keys(selectedAssessments).filter(a => a !== "Other").some(
+                (assessment) => selectedAssessments[assessment] && assessmentWeights[assessment] <= 0
+              ) && (
+                <p className="mt-1 text-red-600">Error: All values must be greater than 0. Please correct your inputs.</p>
+              )}
+
+              {/* Next button to proceed to Step 3 */}
+              <button
+                onClick={() => {
+                  setAttemptedNext(true); // User attempted to proceed
+
+                  // Check if any selected field is empty, 0, or negative
+                  const hasInvalidFields = Object.keys(selectedAssessments).filter(a => a !== "Other").some(
+                    (assessment) => 
+                      selectedAssessments[assessment] && 
+                      (isNaN(assessmentWeights[assessment]) || assessmentWeights[assessment] === "" || assessmentWeights[assessment] <= 0)
+                  );                  
+
+                  if (totalWeight === 100 && !hasInvalidFields) {
+                    setFormStep(3); // Move to the next step only if valid
+                  }
+                }}
+                className="w-full px-4 py-2 mt-4 bg-black text-white rounded"
+              >
+                Next
+              </button>
+
             </div>
           )}
 
