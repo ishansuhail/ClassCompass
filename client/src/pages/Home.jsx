@@ -29,7 +29,7 @@ export default function RPIClassCompass() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      {/* Logo & Title (Centered, above the blue box) */}
+      {/* Logo & Title */}
       <div className="flex flex-col items-center text-center mb-6">
         <img
           src="/logo.png"
@@ -46,7 +46,6 @@ export default function RPIClassCompass() {
 
       {/* Blue Box for Search Bar */}
       <div className="w-full bg-blue-100 border-2 border-yellow-500 py-8 px-8 shadow-md flex justify-center">
-        {/* Search Bar + Button */}
         <div className="flex items-center space-x-2">
           <input
             type="text"
@@ -61,7 +60,6 @@ export default function RPIClassCompass() {
 
       {/* Course Categories Section */}
       <div className="mt-8 w-full max-w-6xl mx-auto p-6">
-        {/* Title & Subtitle */}
         <div>
           <h2 className="text-2xl font-semibold text-gray-900 text-left">
             Course Categories
@@ -76,14 +74,19 @@ export default function RPIClassCompass() {
           {categories.map((cat) => (
             <div
               key={cat.name}
-              className="border-2 border-yellow-500 p-4 rounded-lg hover:bg-yellow-50 transition-colors cursor-pointer flex flex-col"
+              className="border-2 border-yellow-500 p-4 rounded-lg
+                         transition-colors flex flex-col"
+              /* No hover/click on the outer box */
             >
-              <h3 className="text-xl font-bold text-gray-900">{cat.name}</h3>
+              <h3 className="text-xl font-bold text-gray-900">
+                {cat.name}
+              </h3>
               <div className="mt-3 flex flex-col items-start space-y-2">
                 {cat.subLabels.map((sub) => (
                   <div
                     key={sub}
-                    className="border-2 border-yellow-500 px-4 py-2 rounded-full text-gray-700 text-sm"
+                    className="border-2 border-yellow-500 px-4 py-2 rounded-full text-gray-700 text-sm 
+                               hover:bg-yellow-50 cursor-pointer transition-colors"
                   >
                     {sub}
                   </div>
