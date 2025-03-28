@@ -1,43 +1,98 @@
 export default function RPIClassCompass() {
-    return (
-      <div className="flex flex-col items-center p-6 space-y-6">
-        <div className="text-center">
-          <img src="/logo.png" alt="Logo" className="w-20 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold">RPI ClassCompass</h1>
-          <p className="text-gray-600">An RCOS Project</p>
-        </div>
-  
-        <div className="bg-blue-100 border-yellow-400 border-2 p-4 rounded-lg w-full max-w-xl text-center">
-          <p className="font-semibold">Insider information lives here...</p>
+  const categories = [
+    {
+      name: "Architecture",
+      code: "ARCH",
+      subLabels: ["ARCH - Architecture"],
+    },
+    {
+      name: "Engineering",
+      code: "ENGR",
+      subLabels: ["ENGR - Engineering"],
+    },
+    {
+      name: "Science",
+      code: "SCI",
+      subLabels: ["SCI - Science"],
+    },
+    {
+      name: "Interdisciplinary & Other",
+      code: "INTER",
+      subLabels: ["INTER - Other"],
+    },
+    {
+      name: "Management",
+      code: "MGMT",
+      subLabels: ["MGMT - Management"],
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      {/* Logo & Title (Centered, above the blue box) */}
+      <div className="flex flex-col items-center text-center mb-6">
+        <img
+          src="/logo.png"
+          alt="ClassCompass Logo"
+          className="w-40 h-40 mb-4"
+        />
+        <h1 className="text-4xl font-bold text-gray-900">
+          RPI ClassCompass
+        </h1>
+        <p className="text-2xl text-gray-700 mt-2">
+          Search for your class below
+        </p>
+      </div>
+
+      {/* Blue Box for Search Bar */}
+      <div className="w-full bg-blue-100 border-2 border-yellow-500 py-8 px-8 shadow-md flex justify-center">
+        {/* Search Bar + Button */}
+        <div className="flex items-center space-x-2">
           <input
             type="text"
-            placeholder="Input the name or course code of your class"
-            className="mt-2 p-2 w-full border rounded-md"
+            placeholder="Search for a class name or course-code..."
+            className="w-[400px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <button className="bg-white text-gray-700 text-xl px-10 py-3 border border-gray-300 rounded-lg hover:bg-gray-200">
+            Search
+          </button>
         </div>
-  
-        <div className="text-center">
-          <h2 className="text-lg font-semibold">Course Categories</h2>
-          <p className="text-gray-500">Click a course category to start searching!</p>
+      </div>
+
+      {/* Course Categories Section */}
+      <div className="mt-8 w-full max-w-6xl mx-auto p-6">
+        {/* Title & Subtitle */}
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-900 text-left">
+            Course Categories
+          </h2>
+          <p className="text-gray-600 text-left">
+            Click any course category to start searching!
+          </p>
         </div>
-  
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-2xl">
-          {[
-            "Architecture",
-            "Engineering",
-            "Science",
-            "Interdisciplinary & Other",
-            "Management",
-          ].map((category) => (
+
+        {/* Categories Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+          {categories.map((cat) => (
             <div
-              key={category}
-              className="p-4 text-center border-2 border-yellow-400 rounded-lg cursor-pointer hover:bg-yellow-100"
+              key={cat.name}
+              className="border-2 border-yellow-500 p-4 rounded-lg hover:bg-yellow-50 transition-colors cursor-pointer flex flex-col"
             >
-              {category}
+              <h3 className="text-xl font-bold text-gray-900">{cat.name}</h3>
+              <div className="mt-3 flex flex-col items-start space-y-2">
+                {cat.subLabels.map((sub) => (
+                  <div
+                    key={sub}
+                    className="border-2 border-yellow-500 px-4 py-2 rounded-full text-gray-700 text-sm"
+                  >
+                    {sub}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}
