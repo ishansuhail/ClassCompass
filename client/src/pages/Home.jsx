@@ -1,33 +1,39 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function RPIClassCompass() {
-  const categories = [
-    {
-      name: "Architecture",
-      code: "ARCH",
-      subLabels: ["ARCH - Architecture"],
-    },
-    {
-      name: "Engineering",
-      code: "ENGR",
-      subLabels: ["ENGR - Engineering"],
-    },
-    {
-      name: "Science",
-      code: "SCI",
-      subLabels: ["SCI - Science"],
-    },
-    {
-      name: "Interdisciplinary & Other",
-      code: "INTER",
-      subLabels: ["INTER - Other"],
-    },
-    {
-      name: "Management",
-      code: "MGMT",
-      subLabels: ["MGMT - Management"],
-    },
-  ];
+  const [courseSubjects, setCourseSubjects] = useState({});
+
+  useEffect(() => {
+    async function fetchCoursePrefixes() {
+      try {
+        const response = await fetch("/api/unique-course-prefixes");
+        const result = await response.json();
+
+        if (result.success) {
+          const groupedCourses = result.prefixes.reduce((acc, [code, school]) => {
+            acc[school] = acc[school] || [];
+            acc[school].push(code);
+            return acc;
+          }, {});
+
+          setCourseSubjects(groupedCourses);
+        } else {
+          console.error("Failed to fetch prefixes:", result.error);
+        }
+      } catch (error) {
+        console.error("Error fetching course prefixes:", error);
+      }
+    }
+
+    fetchCoursePrefixes();
+  }, []);
+
+  const navigate = useNavigate();
+
+  const handleCourseClick = (school) => {
+    navigate(`/Search?school=${encodeURIComponent(school)}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -72,23 +78,24 @@ export default function RPIClassCompass() {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
-          {categories.map((cat) => (
-            <div
-              key={cat.name}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+            {Object.entries(courseSubjects).map(([school, courses]) => (
+              <div
+              key={school}
               className="border-2 border-yellow-500 p-4 rounded-lg
-                         transition-colors flex flex-col"
+                        transition-colors flex flex-col"
               /* No hover/click on the outer box */
             >
               <h3 className="text-xl font-bold text-gray-900">
-                {cat.name}
+                {school}
               </h3>
               <div className="mt-3 flex flex-col items-start space-y-2">
-                {cat.subLabels.map((sub) => (
+                {courses.map((sub) => (
                   <div
                     key={sub}
                     className="border-2 border-yellow-500 px-4 py-2 rounded-full text-gray-700 text-sm 
-                               hover:bg-yellow-50 cursor-pointer transition-colors"
+                              hover:bg-yellow-50 cursor-pointer transition-colors w-full text-center"
+                    onClick = {() => handleCourseClick(school)}
                   >
                     {sub}
                   </div>
