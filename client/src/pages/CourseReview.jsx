@@ -36,6 +36,8 @@ const CoursePage = () => {
   const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam", "Projects", "Other"];
 
   const [usesTextbook, setUsesTextbook] = useState(null);
+  const [requiresAttendance, setRequiresAttendance] = useState(null);
+  const [requiresParticipation, setRequiresParticipation] = useState(null);
 
   const toggleAssessment = (assessment) => {
     setSelectedAssessments((prev) => ({
@@ -243,7 +245,7 @@ const CoursePage = () => {
                 <button
                   onClick={() => {
                     setUsesTextbook(true);
-                    setFormStep(1);
+                    setFormStep(0.6);
                   }}
                   className="px-6 py-2 bg-green-600 text-white rounded"
                 >
@@ -252,6 +254,58 @@ const CoursePage = () => {
                 <button
                   onClick={() => {
                     setUsesTextbook(false);
+                    setFormStep(0.6);
+                  }}
+                  className="px-6 py-2 bg-red-600 text-white rounded"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          )}
+
+          {formStep === 0.6 && (
+            <div className="mt-8 max-w-md mx-auto text-center">
+              <h3 className="text-lg font-semibold text-gray-900">Is attendance required for this course?</h3>
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={() => {
+                    setRequiresAttendance(true);
+                    setFormStep(0.7);
+                  }}
+                  className="px-6 py-2 bg-green-600 text-white rounded"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => {
+                    setRequiresAttendance(false);
+                    setFormStep(0.7);
+                  }}
+                  className="px-6 py-2 bg-red-600 text-white rounded"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          )}
+
+          {formStep === 0.7 && (
+            <div className="mt-8 max-w-md mx-auto text-center">
+              <h3 className="text-lg font-semibold text-gray-900">Is participation required for this course?</h3>
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={() => {
+                    setRequiresParticipation(true);
+                    setFormStep(1); // Proceed to next step after 0.7
+                  }}
+                  className="px-6 py-2 bg-green-600 text-white rounded"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => {
+                    setRequiresParticipation(false);
                     setFormStep(1);
                   }}
                   className="px-6 py-2 bg-red-600 text-white rounded"
