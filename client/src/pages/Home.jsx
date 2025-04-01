@@ -3,27 +3,27 @@ export default function RPIClassCompass() {
     {
       name: "Architecture",
       code: "ARCH",
-      subLabels: ["ARCH - Architecture"],
+      subLabels: ["ARCH - Architecture", "LGHT - Lighting"],
     },
     {
       name: "Engineering",
       code: "ENGR",
-      subLabels: ["ENGR - Engineering"],
+      subLabels: ["BMED - Biomedical Engineering", "CHME - Chemical Engineering","CIVL - Civil Engineering", "ECSE - Electrical, Computer, and Systems Engineering", "ENGR - General Engineering", "ENVE - Environmental Engineering", "ESCI - Engineering Science", "ISYE - Industrial and Systems Engineering", "MANE - Mechanical, Aerospace, and Nuclear Engineering", "MTLE - Materials Science and Engineering"],
     },
     {
       name: "Science",
       code: "SCI",
-      subLabels: ["SCI - Science"],
+      subLabels: ["ASTR - Astronomy", "BCBP - Biochemistry and Biophysics", "BIOL - Biology", "CHEM - Chemistry", "CSCI - Computer Science", "ERTH - Earth and Environmental Science", "ISCI - Interdisciplinary Science", "MATH - Mathematics", "MATP - Mathematical Programming, Probability, and Statistics", "PHYS - Physics"],
     },
     {
       name: "Interdisciplinary & Other",
       code: "INTER",
-      subLabels: ["INTER - Other"],
+      subLabels: ["ADMN - Administrative Courses", "USAF - Aerospace Studies (Air Force ROTC)", "USAR - Military Science (Army ROTC)", "USNA - Naval Science (Navy ROTC)"],
     },
     {
       name: "Management",
       code: "MGMT",
-      subLabels: ["MGMT - Management"],
+      subLabels: ["BUSN - Business (H)", "MGMT - Management"],
     },
   ];
 
