@@ -85,7 +85,7 @@ export default function RPIClassCompass() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      {/* Logo & Title */}
+      {}
       <div className="flex flex-col items-center text-center mb-6">
         <img
           src="/logo.png"
