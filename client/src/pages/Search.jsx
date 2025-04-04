@@ -287,7 +287,7 @@ export default function ClassCompass() {
             right-0 
             h-full 
             w-96 
-            bg-white  /* Panel background */
+            bg-white
             text-gray-900  
             shadow-xl 
             border-l 
@@ -299,244 +299,292 @@ export default function ClassCompass() {
             ease-out
             flex 
             flex-col 
-            p-6
             items-center
             ${showFilterPanel ? "translate-x-0" : "translate-x-full"}
           `}
         >
-          {/* Panel Header */}
-          <div className="flex justify-between items-center mb-6 w-full">
-            <h3 className="text-2xl font-semibold">Filters</h3>
-            <button
-              className="text-gray-500 hover:text-gray-700 text-xl"
-              onClick={() => setShowFilterPanel(false)}
-            >
-              X
-            </button>
-          </div>
-
-          {/* Filter Accordions */}
-          <div className="w-full text-xl space-y-6 text-left">
-
-            {/* 1) Course Code */}
-            <div className="border border-gray-200 rounded-md">
+          {/* Panel Header - Fixed */}
+          <div className="w-full px-6 py-4 border-b border-gray-200 bg-white">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-semibold">Filters</h3>
               <button
-                onClick={() => setOpenCourseCode((prev) => !prev)}
-                className="
-                  flex
-                  justify-between
-                  w-full
-                  items-center
-                  font-semibold
-                  bg-gray-100
-                  text-gray-800
-                  px-4
-                  py-3
-                  rounded-t-md
-                "
+                className="text-gray-500 hover:text-gray-700 text-xl"
+                onClick={() => setShowFilterPanel(false)}
               >
-                <span>Course Code</span>
-                <ChevronDown
-                  size={24}
-                  className={`transition-transform duration-200 ${
-                    openCourseCode ? "rotate-180" : ""
-                  }`}
-                />
+                X
               </button>
-              {openCourseCode && (
-                <div className="mt-3 ml-4 mb-3 space-y-3">
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                      checked={courseCodeFilter}
-                      onChange={() => setCourseCodeFilter(!courseCodeFilter)}
-                    />
-                    <span>Filter by Course Code</span>
-                  </label>
-                </div>
-              )}
-            </div>
-
-            {/* 2) Course Level */}
-            <div className="border border-gray-200 rounded-md">
-              <button
-                onClick={() => setOpenCourseLevel((prev) => !prev)}
-                className="
-                  flex
-                  justify-between
-                  w-full
-                  items-center
-                  font-semibold
-                  bg-gray-100
-                  text-gray-800
-                  px-4
-                  py-3
-                  rounded-t-md
-                "
-              >
-                <span>Course Level</span>
-                <ChevronDown
-                  size={24}
-                  className={`transition-transform duration-200 ${
-                    openCourseLevel ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {openCourseLevel && (
-                <div className="mt-3 ml-4 mb-3 space-y-3">
-                  {Object.keys(courseLevelFilters).map((level) => (
-                    <label key={level} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                        checked={courseLevelFilters[level]}
-                        onChange={() => handleCourseLevelChange(level)}
-                      />
-                      <span>{level}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 3) Term */}
-            <div className="border border-gray-200 rounded-md">
-              <button
-                onClick={() => setOpenTerm((prev) => !prev)}
-                className="
-                  flex
-                  justify-between
-                  w-full
-                  items-center
-                  font-semibold
-                  bg-gray-100
-                  text-gray-800
-                  px-4
-                  py-3
-                  rounded-t-md
-                "
-              >
-                <span>Term</span>
-                <ChevronDown
-                  size={24}
-                  className={`transition-transform duration-200 ${
-                    openTerm ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {openTerm && (
-                <div className="mt-3 ml-4 mb-3 space-y-3">
-                  {Object.keys(termFilters).map((term) => (
-                    <label key={term} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                        checked={termFilters[term]}
-                        onChange={() => handleTermChange(term)}
-                      />
-                      <span>{term}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 4) Year */}
-            <div className="border border-gray-200 rounded-md">
-              <button
-                onClick={() => setOpenYear((prev) => !prev)}
-                className="
-                  flex
-                  justify-between
-                  w-full
-                  items-center
-                  font-semibold
-                  bg-gray-100
-                  text-gray-800
-                  px-4
-                  py-3
-                  rounded-t-md
-                "
-              >
-                <span>Year</span>
-                <ChevronDown
-                  size={24}
-                  className={`transition-transform duration-200 ${
-                    openYear ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {openYear && (
-                <div className="mt-3 ml-4 mb-3 space-y-3">
-                  {Object.keys(yearFilters).map((year) => (
-                    <label key={year} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                        checked={yearFilters[year]}
-                        onChange={() => handleYearChange(year)}
-                      />
-                      <span>{year}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 5) School */}
-            <div className="border border-gray-200 rounded-md">
-              <button
-                onClick={() => setOpenSchool((prev) => !prev)}
-                className="
-                  flex
-                  justify-between
-                  w-full
-                  items-center
-                  font-semibold
-                  bg-gray-100
-                  text-gray-800
-                  px-4
-                  py-3
-                  rounded-t-md
-                "
-              >
-                <span>School</span>
-                <ChevronDown
-                  size={24}
-                  className={`transition-transform duration-200 ${
-                    openSchool ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {openSchool && (
-                <div className="mt-3 ml-4 mb-3 space-y-3">
-                  {Object.keys(schoolFilters).map((school) => (
-                    <label key={school} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
-                        checked={schoolFilters[school]}
-                        onChange={() => handleSchoolChange(school)}
-                      />
-                      <span>{school}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Apply/Reset Buttons */}
-          <div className="mt-auto pt-8 w-full">
+          {/* Scrollable Content Area */}
+          <div className="flex-1 w-full overflow-y-auto px-6 py-4">
+            {/* Filter Accordions */}
+            <div className="w-full text-xl space-y-6 text-left">
+              {/* 1) Course Code */}
+              <div className="border border-gray-200 rounded-md overflow-hidden">
+                <button
+                  onClick={() => setOpenCourseCode((prev) => !prev)}
+                  className="
+                    flex
+                    justify-between
+                    w-full
+                    items-center
+                    font-semibold
+                    bg-gray-100
+                    text-gray-800
+                    px-4
+                    py-3
+                    hover:bg-gray-200
+                    transition-colors
+                    duration-200
+                  "
+                >
+                  <span>Course Code</span>
+                  <ChevronDown
+                    size={24}
+                    className={`transform transition-transform duration-300 ${
+                      openCourseCode ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div 
+                  className={`
+                    transition-all
+                    duration-300
+                    ease-in-out
+                    ${openCourseCode ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}
+                  `}
+                >
+                  <div className="p-4 space-y-3">
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                        checked={courseCodeFilter}
+                        onChange={() => setCourseCodeFilter(!courseCodeFilter)}
+                      />
+                      <span>Filter by Course Code</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2) Course Level */}
+              <div className="border border-gray-200 rounded-md overflow-hidden">
+                <button
+                  onClick={() => setOpenCourseLevel((prev) => !prev)}
+                  className="
+                    flex
+                    justify-between
+                    w-full
+                    items-center
+                    font-semibold
+                    bg-gray-100
+                    text-gray-800
+                    px-4
+                    py-3
+                    hover:bg-gray-200
+                    transition-colors
+                    duration-200
+                  "
+                >
+                  <span>Course Level</span>
+                  <ChevronDown
+                    size={24}
+                    className={`transform transition-transform duration-300 ${
+                      openCourseLevel ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div 
+                  className={`
+                    transition-all
+                    duration-300
+                    ease-in-out
+                    ${openCourseLevel ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}
+                  `}
+                >
+                  <div className="p-4 space-y-3">
+                    {Object.keys(courseLevelFilters).map((level) => (
+                      <label key={level} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                          checked={courseLevelFilters[level]}
+                          onChange={() => handleCourseLevelChange(level)}
+                        />
+                        <span>{level}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 3) Term */}
+              <div className="border border-gray-200 rounded-md overflow-hidden">
+                <button
+                  onClick={() => setOpenTerm((prev) => !prev)}
+                  className="
+                    flex
+                    justify-between
+                    w-full
+                    items-center
+                    font-semibold
+                    bg-gray-100
+                    text-gray-800
+                    px-4
+                    py-3
+                    hover:bg-gray-200
+                    transition-colors
+                    duration-200
+                  "
+                >
+                  <span>Term</span>
+                  <ChevronDown
+                    size={24}
+                    className={`transform transition-transform duration-300 ${
+                      openTerm ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div 
+                  className={`
+                    transition-all
+                    duration-300
+                    ease-in-out
+                    ${openTerm ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}
+                  `}
+                >
+                  <div className="p-4 space-y-3">
+                    {Object.keys(termFilters).map((term) => (
+                      <label key={term} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                          checked={termFilters[term]}
+                          onChange={() => handleTermChange(term)}
+                        />
+                        <span>{term}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 4) Year */}
+              <div className="border border-gray-200 rounded-md overflow-hidden">
+                <button
+                  onClick={() => setOpenYear((prev) => !prev)}
+                  className="
+                    flex
+                    justify-between
+                    w-full
+                    items-center
+                    font-semibold
+                    bg-gray-100
+                    text-gray-800
+                    px-4
+                    py-3
+                    hover:bg-gray-200
+                    transition-colors
+                    duration-200
+                  "
+                >
+                  <span>Year</span>
+                  <ChevronDown
+                    size={24}
+                    className={`transform transition-transform duration-300 ${
+                      openYear ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div 
+                  className={`
+                    transition-all
+                    duration-300
+                    ease-in-out
+                    ${openYear ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}
+                  `}
+                >
+                  <div className="p-4 space-y-3">
+                    {Object.keys(yearFilters).map((year) => (
+                      <label key={year} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                          checked={yearFilters[year]}
+                          onChange={() => handleYearChange(year)}
+                        />
+                        <span>{year}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 5) School */}
+              <div className="border border-gray-200 rounded-md overflow-hidden">
+                <button
+                  onClick={() => setOpenSchool((prev) => !prev)}
+                  className="
+                    flex
+                    justify-between
+                    w-full
+                    items-center
+                    font-semibold
+                    bg-gray-100
+                    text-gray-800
+                    px-4
+                    py-3
+                    hover:bg-gray-200
+                    transition-colors
+                    duration-200
+                  "
+                >
+                  <span>School</span>
+                  <ChevronDown
+                    size={24}
+                    className={`transform transition-transform duration-300 ${
+                      openSchool ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div 
+                  className={`
+                    transition-all
+                    duration-300
+                    ease-in-out
+                    ${openSchool ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}
+                  `}
+                >
+                  <div className="p-4 space-y-3">
+                    {Object.keys(schoolFilters).map((school) => (
+                      <label key={school} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="w-5 h-5 accent-yellow-500 checked:border-yellow-500 rounded-sm"
+                          checked={schoolFilters[school]}
+                          onChange={() => handleSchoolChange(school)}
+                        />
+                        <span>{school}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Buttons - Fixed */}
+          <div className="w-full px-6 py-4 border-t border-gray-200 bg-white">
             <button
-              className="w-full py-3 mb-2 border rounded hover:bg-gray-100 text-xl"
+              className="w-full py-3 mb-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
               onClick={applyFilters}
             >
               Apply Filters
             </button>
             <button
-              className="w-full py-3 border rounded hover:bg-gray-100 text-xl"
+              className="w-full py-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors duration-200"
               onClick={resetFilters}
             >
               Reset Filters
