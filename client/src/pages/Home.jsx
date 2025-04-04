@@ -112,36 +112,47 @@ export default function RPIClassCompass() {
 
       {/* Course Categories Section */}
       <div className="mt-8 w-full max-w-6xl mx-auto p-6">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900 text-left">Course Categories</h2>
-          <p className="text-gray-600 text-left">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-left mb-2">Course Categories</h2>
+          <p className="text-gray-600 text-lg text-left">
             Click any course category to start searching!
           </p>
         </div>
 
         {/* Masonry-style layout using columns */}
-        <div className="mt-4 columns-1 sm:columns-2 md:columns-3 gap-6">
+        <div className="mt-6 columns-1 sm:columns-2 md:columns-3 gap-8">
           {categories.map((cat) => (
             <div
               key={cat.name}
-              className="mb-6 break-inside-avoid border-2 border-yellow-500 p-4 rounded-lg transition-colors flex flex-col"
+              className="mb-8 break-inside-avoid bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
             >
-              <h3 className="text-xl font-bold text-gray-900">{cat.name}</h3>
-              <div className="mt-3 flex flex-col items-start space-y-2">
-                {cat.subLabels.map((sub) => {
-                  const parts = sub.split(" - ");
-                  return (
-                    <div
-                      key={sub}
-                      className="w-full border-2 border-yellow-500 px-4 py-2 rounded-full text-gray-700 text-sm hover:bg-yellow-50 cursor-pointer transition-colors text-left whitespace-normal"
-                    >
-                      <span className="font-bold">{parts[0]}</span>
-                      {parts.length > 1 && (
-                        <span> - {parts.slice(1).join(" - ")}</span>
-                      )}
-                    </div>
-                  );
-                })}
+              <div className="p-5 border-b border-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{cat.name}</h3>
+                <span className="text-sm font-medium text-gray-500">{cat.code}</span>
+              </div>
+              <div className="p-4">
+                <div className="flex flex-col items-start space-y-2">
+                  {cat.subLabels.map((sub) => {
+                    const parts = sub.split(" - ");
+                    return (
+                      <button
+                        key={sub}
+                        className="w-full px-4 py-2.5 rounded-lg text-left group hover:bg-blue-50 transition-all duration-200"
+                      >
+                        <div className="flex items-center">
+                          <span className="font-semibold text-blue-900 group-hover:text-blue-700 transition-colors">
+                            {parts[0]}
+                          </span>
+                          {parts.length > 1 && (
+                            <span className="ml-2 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
+                              {parts.slice(1).join(" - ")}
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           ))}
