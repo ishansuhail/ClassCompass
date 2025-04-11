@@ -72,15 +72,16 @@ export default function ClassCompass() {
     const groupedMap = {};
   
     sections.forEach((section) => {
-      const { course_code, name } = section;
+      const { course_code, name, school } = section;
       
-      const key = `${course_code}||${name}`;
+      const key = `${course_code}||${name}||${school}`;
   
       // If this key doesn't exist yet, initialize it
       if (!groupedMap[key]) {
         groupedMap[key] = {
           course_code,
           name,
+          school,
           sections: []
         };
       }
@@ -195,7 +196,8 @@ export default function ClassCompass() {
     const selectedSchools = Object.entries(schoolFilters)
       .filter(([_, isSelected]) => isSelected)
       .map(([school]) => school);
-      
+    console.log("Selected Schools", selectedSchools)
+    console.log("Results:", results)
     if (selectedSchools.length > 0) {
       results = results.filter((course) => selectedSchools.includes(course.school));
     }
