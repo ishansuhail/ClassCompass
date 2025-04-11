@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 export default function ClassCompass() {
   const [search, setSearch] = useState("");
   const [classes, setClasses] = useState([]);
@@ -47,22 +46,23 @@ export default function ClassCompass() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchResults = async () => {
-      const response = await fetch("/api/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ search }),
-      });
-      const { data } = await response.json();
-      const condensed_data = groupByCourseAndName(data);
-      const topResults = condensed_data.slice(0, 10);
-      setClasses(topResults);
-      setFilteredClasses(topResults);
-    };
+  const fetchResults = async () => {
+    const response = await fetch("/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ search }),
+    });
+    const { data } = await response.json();
+    const condensed_data = groupByCourseAndName(data);
+    const topResults = condensed_data.slice(0, 10);
+    setClasses(topResults);
+    setFilteredClasses(topResults);
+    filterClasses();
+  };
 
+  useEffect(() => {
     fetchResults();
   }, [search]);
 
@@ -150,11 +150,10 @@ export default function ClassCompass() {
     });
 
     // Reset to original results
-    setFilteredClasses(classes);
+    fetchResults();
   };
 
-  // Apply filters
-  const applyFilters = () => {
+  const filterClasses = () => {
     let results = [...classes];
 
     // Filter by course level
@@ -196,12 +195,17 @@ export default function ClassCompass() {
     const selectedSchools = Object.entries(schoolFilters)
       .filter(([_, isSelected]) => isSelected)
       .map(([school]) => school);
-
+      
     if (selectedSchools.length > 0) {
       results = results.filter((course) => selectedSchools.includes(course.school));
     }
 
     setFilteredClasses(results);
+  }
+
+  // Apply filters
+  const applyFilters = () => {
+    fetchResults();
     setShowFilterPanel(false);
   };
 
