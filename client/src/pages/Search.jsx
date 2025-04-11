@@ -44,6 +44,13 @@ export default function ClassCompass() {
     "School of Engineering": false,
   });
 
+  const [filterStatus, setFilterStatus] = useState({
+    "level": false,
+    "term": false,
+    "year": false,
+    "school": false,
+  })
+
   const navigate = useNavigate();
 
   const fetchResults = async () => {
@@ -123,6 +130,48 @@ export default function ClassCompass() {
     });
   };
 
+  const updateFilterStatus = () => {
+      // Check level
+      let level_active = false;
+      Object.values(courseLevelFilters).forEach(value => {
+        if (value == true) {
+          level_active = true
+        }
+      });
+
+      // Check term
+      let term_active = false;
+      Object.values(termFilters).forEach(value => {
+        if (value == true) {
+          term_active = true
+        }
+      });
+
+      // Check year
+      let year_active = false;
+      Object.values(yearFilters).forEach(value => {
+        if (value == true) {
+          year_active = true
+        }
+      });
+
+      // Check school
+      let school_active = false;
+      Object.values(schoolFilters).forEach(value => {
+        if (value == true) {
+          school_active = true
+        }
+      });
+
+      // Update filter status object
+      setFilterStatus({
+        "level": level_active,
+        "term": term_active,
+        "year": year_active,
+        "school": school_active,
+      });
+  }
+
   // Reset all filters
   const resetFilters = () => {
     setCourseCodeFilter(false);
@@ -152,6 +201,9 @@ export default function ClassCompass() {
 
     // Reset to original results
     fetchResults();
+
+    // Update the filter status
+    updateFilterStatus();
   };
 
   const filterClasses = () => {
@@ -196,8 +248,7 @@ export default function ClassCompass() {
     const selectedSchools = Object.entries(schoolFilters)
       .filter(([_, isSelected]) => isSelected)
       .map(([school]) => school);
-    console.log("Selected Schools", selectedSchools)
-    console.log("Results:", results)
+
     if (selectedSchools.length > 0) {
       results = results.filter((course) => selectedSchools.includes(course.school));
     }
@@ -209,6 +260,7 @@ export default function ClassCompass() {
   const applyFilters = () => {
     fetchResults();
     setShowFilterPanel(false);
+    updateFilterStatus();
   };
 
   const goToCourseReveiw = (course) => {
@@ -260,6 +312,13 @@ export default function ClassCompass() {
           >
             Add Filters
           </button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mt-2">
+          {filterStatus.level && <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">Level</span>}
+          {filterStatus.term && <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">Term</span>}
+          {filterStatus.year && <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full">Year</span>}
+          {filterStatus.school && <span className="px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">School</span>}
         </div>
 
         {/* Class Cards */}
