@@ -44,12 +44,8 @@ export default function RPIClassCompass() {
           alt="ClassCompass Logo"
           className="w-40 h-40 mb-4"
         />
-        <h1 className="text-4xl font-bold text-gray-900">
-          RPI ClassCompass
-        </h1>
-        <p className="text-2xl text-gray-700 mt-2">
-          Search for your class below
-        </p>
+        <h1 className="text-4xl font-bold text-gray-900">RPI ClassCompass</h1>
+        <p className="text-2xl text-gray-700 mt-2">Search for your class below</p>
       </div>
 
       {/* Blue Box for Search Bar */}
@@ -68,11 +64,9 @@ export default function RPIClassCompass() {
 
       {/* Course Categories Section */}
       <div className="mt-8 w-full max-w-6xl mx-auto p-6">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900 text-left">
-            Course Categories
-          </h2>
-          <p className="text-gray-600 text-left">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-left mb-2">Course Categories</h2>
+          <p className="text-gray-600 text-lg text-left">
             Click any course category to start searching!
           </p>
         </div>

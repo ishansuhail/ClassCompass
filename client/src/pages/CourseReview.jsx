@@ -28,12 +28,16 @@ const CoursePage = () => {
     }));
   };
 
-  const [formStep, setFormStep] = useState(1); // Tracks which step of the form we are on
+  const [formStep, setFormStep] = useState(0); // Tracks which step of the form we are on
   const [selectedAssessments, setSelectedAssessments] = useState({});
   const [customAssessments, setCustomAssessments] = useState([""]); // Stores user-defined "Other" options
   const [customAttemptedNext, setCustomAttemptedNext] = useState(false);
   const [assessmentCounts, setAssessmentCounts] = useState({});
   const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam", "Projects", "Other"];
+
+  const [usesTextbook, setUsesTextbook] = useState(null);
+  const [requiresAttendance, setRequiresAttendance] = useState(null);
+  const [requiresParticipation, setRequiresParticipation] = useState(null);
 
   const toggleAssessment = (assessment) => {
     setSelectedAssessments((prev) => ({
@@ -124,8 +128,14 @@ const CoursePage = () => {
         {/* Centered Course Info */}
         <div className="flex flex-col items-center text-center">
           {/* Keep the original text */}
-          <h1 className="text-4xl font-bold text-gray-900">{course.course_code}</h1>
-          <p className="text-2xl text-gray-700">{course.name}</p>
+          {course ? (
+            <>
+              <h1 className="text-4xl font-bold text-gray-900">{course.course_code}</h1>
+              <p className="text-2xl text-gray-700">{course.name}</p>
+            </>
+          ) : (
+            <p className="text-gray-600">Course info unavailable</p>
+          )}
 
           {/* Keep the original dropdown code */}
           <div className="relative mt-4">
@@ -214,6 +224,97 @@ const CoursePage = () => {
         <section className="bg-blue-100 p-6 rounded-lg border border-yellow-500 mt-8">
           <h2 className="text-2xl font-bold text-center">Submit Course Statistics</h2>
           <p className="text-gray-700 text-center">Share your experience and course details</p>
+
+          {formStep === 0 && (
+            <div className="mt-8 max-w-md mx-auto text-center">
+              <h3 className="text-2xl font-bold text-gray-900">Ready to Submit Course Statistics?</h3>
+              <p className="mt-2 text-gray-600">Click below to start the questionnaire about this class.</p>
+              <button
+                onClick={() => setFormStep(0.5)}
+                className="mt-6 px-6 py-2 bg-black text-white rounded"
+              >
+                Start
+              </button>
+            </div>
+          )}
+
+          {formStep === 0.5 && (
+            <div className="mt-8 max-w-md mx-auto text-center">
+              <h3 className="text-lg font-semibold text-gray-900">Was a textbook required for this course?</h3>
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={() => {
+                    setUsesTextbook(true);
+                    setFormStep(0.6);
+                  }}
+                  className="px-6 py-2 bg-green-600 text-white rounded"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => {
+                    setUsesTextbook(false);
+                    setFormStep(0.6);
+                  }}
+                  className="px-6 py-2 bg-red-600 text-white rounded"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          )}
+
+          {formStep === 0.6 && (
+            <div className="mt-8 max-w-md mx-auto text-center">
+              <h3 className="text-lg font-semibold text-gray-900">Is attendance required for this course?</h3>
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={() => {
+                    setRequiresAttendance(true);
+                    setFormStep(0.7);
+                  }}
+                  className="px-6 py-2 bg-green-600 text-white rounded"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => {
+                    setRequiresAttendance(false);
+                    setFormStep(0.7);
+                  }}
+                  className="px-6 py-2 bg-red-600 text-white rounded"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          )}
+
+          {formStep === 0.7 && (
+            <div className="mt-8 max-w-md mx-auto text-center">
+              <h3 className="text-lg font-semibold text-gray-900">Is participation required for this course?</h3>
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={() => {
+                    setRequiresParticipation(true);
+                    setFormStep(1); // Proceed to next step after 0.7
+                  }}
+                  className="px-6 py-2 bg-green-600 text-white rounded"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => {
+                    setRequiresParticipation(false);
+                    setFormStep(1);
+                  }}
+                  className="px-6 py-2 bg-red-600 text-white rounded"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          )}
 
           {formStep === 1 && (
             <div className="mt-4 max-w-md mx-auto">
