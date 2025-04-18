@@ -404,6 +404,13 @@ const CoursePage = () => {
 
             </div>
           )}
+          {formStep === 3 && (
+            <div className="mt-8 max-w-md mx-auto text-center">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Thank you for submitting your feedback!
+              </h3>
+            </div>
+          )}
 
         </section>
 
