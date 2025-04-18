@@ -98,6 +98,35 @@ const CoursePage = () => {
     console.log(course)
   })
 
+  const reviews = [
+    {
+      title: "Comprehensive & Engaging",
+      semester: "Spring 2025",
+      reviewer: "Alex Johnson",
+      date: "April 12, 2025",
+      content:
+        "I absolutely loved this course! The lectures were clear and well‑paced, "
+      + "and the homework assignments really helped me solidify tough concepts. "
+      + "Professor Lee was always available during office hours, which made a huge difference. "
+      + "Highly recommend to anyone looking to deepen their understanding of this subject.",
+    },
+    // keep placeholders for reviews 2 & 3:
+    {
+      title: "Review Title 2",
+      semester: "Fall 2024",
+      reviewer: "Reviewer Name",
+      date: "Date",
+      content: "",
+    },
+    {
+      title: "Review Title 3",
+      semester: "Fall 2024",
+      reviewer: "Reviewer Name",
+      date: "Date",
+      content: "",
+    },
+  ];
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -193,16 +222,20 @@ const CoursePage = () => {
         <section className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-900">Student Reviews</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
-            {[1, 2, 3].map((review, index) => (
-              <div key={index} className="p-4 bg-white shadow rounded-lg border border-gray-200">
-                <h3 className="font-semibold text-lg">Review Title {index + 1}</h3>
-                <p className="text-xs text-gray-500">Semester/Year</p>
-                <p className="text-sm text-gray-600">Reviewer Name</p>
-                <p className="text-xs text-gray-400">Date</p>
+            {reviews.map((review, idx) => (
+              <div key={idx} className="p-4 bg-white shadow rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-lg">{review.title}</h3>
+                <p className="text-xs text-gray-500">{review.semester}</p>
+                <p className="text-sm text-gray-600">{review.reviewer}</p>
+                <p className="text-xs text-gray-400">{review.date}</p>
+                {review.content && (
+                  <p className="mt-2 text-gray-700">{review.content}</p>
+                )}
               </div>
             ))}
           </div>
         </section>
+
 
         {/* Submit Course Stats Form */}
         <section className="bg-blue-100 p-6 rounded-lg border border-yellow-500 mt-8">
