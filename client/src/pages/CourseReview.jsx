@@ -122,11 +122,15 @@ const CoursePage = () => {
       + "concepts in real‑world scenarios.",
     },
     {
-      title: "Review Title 3",
-      semester: "Fall 2024",
-      reviewer: "Reviewer Name",
-      date: "Date",
-      content: "",
+      title: "Practical & Insightful",
+      semester: "Summer 2024",
+      reviewer: "David Patel",
+      date: "July 20, 2024",
+      content:
+        "Hands‑on labs and real‑world case studies made this course stand out. "
+      + "The quizzes were fair and directly reinforced lecture material. "
+      + "I appreciated the guest speakers who brought industry perspectives into the classroom. "
+      + "Overall, this course equipped me with skills I can use immediately in my internship.",
     },
   ];
 
