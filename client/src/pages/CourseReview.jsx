@@ -110,13 +110,16 @@ const CoursePage = () => {
       + "Professor Lee was always available during office hours, which made a huge difference. "
       + "Highly recommend to anyone looking to deepen their understanding of this subject.",
     },
-    // keep placeholders for reviews 2 & 3:
     {
-      title: "Review Title 2",
+      title: "Challenging but Rewarding",
       semester: "Fall 2024",
-      reviewer: "Reviewer Name",
-      date: "Date",
-      content: "",
+      reviewer: "Maria Chen",
+      date: "December 10, 2024",
+      content:
+        "This course was definitely a challenge, but it was one of the most rewarding experiences "
+      + "I’ve had. The group projects taught me how to collaborate effectively, and the professor’s "
+      + "feedback was always constructive. By the end of the semester, I felt confident applying these "
+      + "concepts in real‑world scenarios.",
     },
     {
       title: "Review Title 3",
