@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { GrCalendar, GrBarChart, GrCertificate, GrCatalog } from "react-icons/gr"; // Importing new icons
+import { FaStar, FaRegStar } from "react-icons/fa";
 
 const CoursePage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -104,6 +105,7 @@ const CoursePage = () => {
       semester: "Spring 2025",
       reviewer: "Alex Johnson",
       date: "April 12, 2025",
+      rating: 5,
       content:
         "I absolutely loved this course! The lectures were clear and well‑paced, "
       + "and the homework assignments really helped me solidify tough concepts. "
@@ -115,6 +117,7 @@ const CoursePage = () => {
       semester: "Fall 2024",
       reviewer: "Maria Chen",
       date: "December 10, 2024",
+      rating: 4,
       content:
         "This course was definitely a challenge, but it was one of the most rewarding experiences "
       + "I’ve had. The group projects taught me how to collaborate effectively, and the professor’s "
@@ -126,6 +129,7 @@ const CoursePage = () => {
       semester: "Summer 2024",
       reviewer: "David Patel",
       date: "July 20, 2024",
+      rating: 5,
       content:
         "Hands‑on labs and real‑world case studies made this course stand out. "
       + "The quizzes were fair and directly reinforced lecture material. "
@@ -235,6 +239,16 @@ const CoursePage = () => {
                 <p className="text-xs text-gray-500">{review.semester}</p>
                 <p className="text-sm text-gray-600">{review.reviewer}</p>
                 <p className="text-xs text-gray-400">{review.date}</p>
+                {/* ⭐⭐⭐⭐⭐ */}
+                <div className="flex items-center justify-center mb-2">
+                {[1, 2, 3, 4, 5].map((i) =>
+                    i <= review.rating ? (
+                      <FaStar key={i} className="text-yellow-500 inline-block" />
+                    ) : (
+                      <FaRegStar key={i} className="text-yellow-500 inline-block" />
+                    )
+                  )}
+                </div>
                 {review.content && (
                   <p className="mt-2 text-gray-700">{review.content}</p>
                 )}
