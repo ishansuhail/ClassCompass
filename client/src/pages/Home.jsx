@@ -1,6 +1,13 @@
 import { categories } from './categories';
+import { useNavigate } from 'react-router-dom';
 
 export default function RPIClassCompass() {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (category) => {
+    navigate('/Subject', { state: { category } });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Logo & Title */}
@@ -43,6 +50,7 @@ export default function RPIClassCompass() {
             <div
               key={cat.name}
               className="mb-8 break-inside-avoid bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+              onClick={() => handleCategoryClick(cat)}
             >
               <div className="p-5 border-b border-gray-100">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{cat.name}</h3>
