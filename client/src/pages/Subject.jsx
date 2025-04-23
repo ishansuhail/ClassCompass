@@ -10,20 +10,22 @@ const Subject = () => {
   useEffect(() => {
     const subjectCode = searchParams.get('subject');
     if (subjectCode) {
-      // Fetch or filter classes based on the subject code
-      // This is a placeholder for fetching logic
-      const filteredClasses = mockFetchClasses().filter(cls => cls.subjectCode === subjectCode);
-      setClasses(filteredClasses);
+      fetchClasses(subjectCode);
     }
   }, [searchParams]);
 
-
-  const mockFetchClasses = () => [
-    { id: 1, name: 'Intro to Architecture', subjectCode: 'ARCH' },
-    { id: 2, name: 'Advanced Engineering', subjectCode: 'ENGR' },
-    { id: 3, name: 'Web Science Basics', subjectCode: 'ITWS' },
-   
-  ];
+  const fetchClasses = async (subjectCode) => {
+    try {
+      const response = await fetch(`/api/classes?subject=${subjectCode}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch classes');
+      }
+      const data = await response.json();
+      setClasses(data);
+    } catch (error) {
+      console.error('Error fetching classes:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
