@@ -35,9 +35,6 @@ const CoursePage = () => {
   const [assessmentCounts, setAssessmentCounts] = useState({});
   const assessments = ["Labs", "Quizzes", "Homeworks", "Exams", "Final Exam", "Projects", "Other"];
 
-  const [usesTextbook, setUsesTextbook] = useState(null);
-  const [requiresAttendance, setRequiresAttendance] = useState(null);
-  const [requiresParticipation, setRequiresParticipation] = useState(null);
 
   const toggleAssessment = (assessment) => {
     setSelectedAssessments((prev) => ({
@@ -75,7 +72,6 @@ const CoursePage = () => {
   const [assessmentWeights, setAssessmentWeights] = useState({});
   const [totalWeight, setTotalWeight] = useState(0);
   // State to store weight validation errors
-  const [weightError, setWeightError] = useState("");
   // State to track if user attempted to proceed without meeting conditions
   const [attemptedNext, setAttemptedNext] = useState(false);
 
@@ -209,7 +205,7 @@ const CoursePage = () => {
         <section className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-900">Student Reviews</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
-            {[1, 2, 3].map((review, index) => (
+            {[1, 2, 3].map((_, index) => (
               <div key={index} className="p-4 bg-white shadow rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-lg">Review Title {index + 1}</h3>
                 <p className="text-xs text-gray-500">Semester/Year</p>
