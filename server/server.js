@@ -72,6 +72,28 @@ app.post('/api/feedback', async (req, res) => {
     }
 });
 
+app.get('/api/classes', async (req, res) => {
+    const subjectCode = req.query.subject;
+    if (!subjectCode) {
+        return res.status(400).json({ success: false, error: 'Subject code is required' });
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('syllabus_info')
+            .select('*')
+            .eq('subject', subjectCode);
+
+        if (error) {
+            throw error;
+        }
+
+        res.json({ success: true, data });
+    } catch (error) {
+        console.error('Error fetching classes:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
 
 // Function to fetch data from the 'syllabus_info' table in Supabase
 async function fetchData() {
