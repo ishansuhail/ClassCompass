@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+}
+
+
 export default function ClassCompass() {
+
   const [search, setSearch] = useState("");
   const [classes, setClasses] = useState([]);
   const [filteredClasses, setFilteredClasses] = useState([]);
@@ -51,6 +58,23 @@ export default function ClassCompass() {
     "school": false,
   })
 
+  const query = useQuery();
+  const homeSchoolFilter = query.get('school');
+
+  useEffect(() => {
+    if (homeSchoolFilter && Object.keys(schoolFilters).includes(homeSchoolFilter)) {
+      setSchoolFilters(prev => ({
+        ...prev,
+        [homeSchoolFilter]: true,
+      }));
+    }
+  }, [homeSchoolFilter]);
+  
+  useEffect(() => {
+    updateFilterStatus();
+    applyFilters();
+  }, [schoolFilters]);
+
   const navigate = useNavigate();
 
   const fetchResults = async () => {
@@ -72,7 +96,6 @@ export default function ClassCompass() {
   useEffect(() => {
     fetchResults();
   }, [search]);
-
 
   function groupByCourseAndName(sections) {
    
