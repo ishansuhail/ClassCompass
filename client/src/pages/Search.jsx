@@ -60,6 +60,13 @@ export default function ClassCompass() {
 
   const query = useQuery();
   const homeSchoolFilter = query.get('school');
+  const initSearch = query.get("searchTerm");
+
+  useEffect(() => {
+    if (initSearch) {
+      setSearch(initSearch);
+    }
+  }, [initSearch]);
 
   useEffect(() => {
     if (homeSchoolFilter && Object.keys(schoolFilters).includes(homeSchoolFilter)) {
