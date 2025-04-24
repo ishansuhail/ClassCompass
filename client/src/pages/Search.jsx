@@ -290,6 +290,10 @@ export default function ClassCompass() {
     navigate("/CourseReview", { state: { course } });
   };
 
+  const goToHome = () => {
+    navigate("/");
+  } 
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header Section */}
@@ -299,6 +303,7 @@ export default function ClassCompass() {
           src="/logo.png"
           alt="ClassCompass Logo"
           className="w-40 h-40 absolute left-8 top-1/2 transform -translate-y-1/2"
+          onClick={goToHome}
         />
 
         {/* Centered Header Text and Search Bar */}
