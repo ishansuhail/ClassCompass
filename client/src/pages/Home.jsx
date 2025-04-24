@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function RPIClassCompass() {
   const [courseSubjects, setCourseSubjects] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function fetchCoursePrefixes() {
@@ -35,6 +36,10 @@ export default function RPIClassCompass() {
     navigate(`/Search?school=${encodeURIComponent(school)}`);
   };
 
+  const handleSearchButtonClick = (searchText) => {
+    navigate(`/Search?searchTerm=${encodeURIComponent(searchTerm)}`);
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Logo & Title */}
@@ -55,8 +60,13 @@ export default function RPIClassCompass() {
             type="text"
             placeholder="Search for a class name or course-code..."
             className="w-[400px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button className="bg-white text-gray-700 text-xl px-10 py-3 border border-gray-300 rounded-lg hover:bg-gray-200">
+          <button 
+            className="bg-white text-gray-700 text-xl px-10 py-3 border border-gray-300 rounded-lg hover:bg-gray-200"
+            onClick={handleSearchButtonClick}
+          >
             Search
           </button>
         </div>
