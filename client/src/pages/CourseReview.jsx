@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { GrCalendar, GrBarChart, GrCertificate, GrCatalog } from "react-icons/gr"; // Importing new icons
 
 const CoursePage = () => {
@@ -38,6 +38,8 @@ const CoursePage = () => {
   const [usesTextbook, setUsesTextbook] = useState(null);
   const [requiresAttendance, setRequiresAttendance] = useState(null);
   const [requiresParticipation, setRequiresParticipation] = useState(null);
+
+  const navigate = useNavigate();
 
   const toggleAssessment = (assessment) => {
     setSelectedAssessments((prev) => ({
@@ -111,6 +113,10 @@ const CoursePage = () => {
     setSyllabi(course.sections)
   })
 
+  const goToHome = () => {
+    navigate("/");
+  } 
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -123,6 +129,7 @@ const CoursePage = () => {
           src="/logo.png"
           alt="ClassCompass Logo"
           className="w-40 h-40 absolute left-8 top-1/2 transform -translate-y-1/2"
+          onClick={goToHome}
         />
 
         {/* Centered Course Info */}
